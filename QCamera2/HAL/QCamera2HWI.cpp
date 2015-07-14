@@ -4107,10 +4107,13 @@ int32_t QCamera2HardwareInterface::processHDRData(cam_asd_hdr_scene_data_t hdr_s
         }
     }
 
+#ifndef DISABLE_DEBUG_LOG
     CDBG("%s : hdr_scene_data: processHDRData: %d %f",
           __func__,
           hdr_scene.is_hdr_scene,
           hdr_scene.hdr_confidence);
+#endif
+#endif
 
 #endif
   return rc;
@@ -6317,8 +6320,6 @@ bool QCamera2HardwareInterface::needDualReprocess()
 }
 
 /*===========================================================================
-
->>>>>>> c709c9a... Camera: Block CancelAF till HAL receives AF event.
  * FUNCTION   : needReprocess
  *
  * DESCRIPTION: if reprocess is needed
