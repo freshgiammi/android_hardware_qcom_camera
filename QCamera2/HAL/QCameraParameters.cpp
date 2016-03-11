@@ -361,8 +361,6 @@ const char QCameraParameters::KEY_SELECTED_AUTO_SCENE[] = "selected-auto-scene";
 static const char* portrait = "portrait";
 static const char* landscape = "landscape";
 
-static int32_t mExposureTime = 0;
-
 const cam_dimension_t QCameraParameters::THUMBNAIL_SIZES_MAP[] = {
     { 512, 288 }, //1.777778
     { 480, 288 }, //1.666667
@@ -741,7 +739,8 @@ QCameraParameters::QCameraParameters()
       mFlashValue(CAM_FLASH_MODE_OFF),
       mFlashDaemonValue(CAM_FLASH_MODE_OFF),
       m_bSensorHDREnabled(false),
-      m_bTruePortraitOn(false)
+      m_bTruePortraitOn(false),
+      mExposureTime(0)
 {
     char value[PROPERTY_VALUE_MAX];
     // TODO: may move to parameter instead of sysprop
@@ -833,7 +832,8 @@ QCameraParameters::QCameraParameters(const String8 &params)
     mFlashValue(CAM_FLASH_MODE_OFF),
     mFlashDaemonValue(CAM_FLASH_MODE_OFF),
     m_bSensorHDREnabled(false),
-    m_bTruePortraitOn(false)
+    m_bTruePortraitOn(false),
+    mExposureTime(0)
 {
     memset(&m_LiveSnapshotSize, 0, sizeof(m_LiveSnapshotSize));
     m_pTorch = NULL;

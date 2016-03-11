@@ -936,7 +936,7 @@ private:
     int32_t mFlashDaemonValue;
     bool m_bSensorHDREnabled;             // if HDR is enabled
     bool m_bTruePortraitOn;
-
+    int32_t mExposureTime;
 };
 
 }; // namespace qcamera
