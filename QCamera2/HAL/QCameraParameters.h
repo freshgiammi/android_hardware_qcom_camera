@@ -685,6 +685,8 @@ public:
             isChromaFlashEnabled() || isOptiZoomEnabled() || isHDREnabled() ||
             isfssrEnabled() || isMultiTouchFocusEnabled();}
     int32_t setIntEvent(cam_int_evt_params_t params);
+    void setPrvwIsoMode(int32_t isoValue);
+    int32_t getPrvwIsoMode();
 
 private:
     int32_t setPreviewSize(const QCameraParameters& );
@@ -937,6 +939,8 @@ private:
     bool m_bSensorHDREnabled;             // if HDR is enabled
     bool m_bTruePortraitOn;
     int32_t mExposureTime;
+    int32_t mPrvwIsoMode;
+    int32_t mManualIso;
 };
 
 }; // namespace qcamera

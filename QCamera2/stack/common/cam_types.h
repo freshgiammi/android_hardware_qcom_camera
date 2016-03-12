@@ -45,6 +45,14 @@
 #define ASD_DEBUG_DATA_SIZE          (100)
 #define STATS_BUFFER_DEBUG_DATA_SIZE (74756)
 
+#define ISO_VAL_AUTO 0
+#define ISO_VAL_100 100
+#define ISO_VAL_200 200
+#define ISO_VAL_400 400
+#define ISO_VAL_800 800
+#define ISO_VAL_1600 1600
+#define ISO_VAL_3200 3200
+
 #define CEILING64(X) (((X) + 0x0003F) & 0xFFFFFFC0)
 #define CEILING32(X) (((X) + 0x0001F) & 0xFFFFFFE0)
 #define CEILING16(X) (((X) + 0x000F) & 0xFFF0)
