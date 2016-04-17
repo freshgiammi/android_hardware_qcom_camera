@@ -742,7 +742,8 @@ QCameraParameters::QCameraParameters()
       m_bTruePortraitOn(false),
       mExposureTime(0),
       mPrvwIsoMode(0),
-      mManualIso(CAM_ISO_MODE_AUTO)
+      mManualIso(CAM_ISO_MODE_AUTO),
+      m_bSceneModeAuto(true)
 {
     char value[PROPERTY_VALUE_MAX];
     // TODO: may move to parameter instead of sysprop
@@ -837,7 +838,8 @@ QCameraParameters::QCameraParameters(const String8 &params)
     m_bTruePortraitOn(false),
     mExposureTime(0),
     mPrvwIsoMode(0),
-    mManualIso(CAM_ISO_MODE_AUTO)
+    mManualIso(CAM_ISO_MODE_AUTO),
+    m_bSceneModeAuto(true)
 {
     memset(&m_LiveSnapshotSize, 0, sizeof(m_LiveSnapshotSize));
     m_pTorch = NULL;
@@ -2996,6 +2998,9 @@ int32_t QCameraParameters::setSceneMode(const QCameraParameters& params)
 
             if(strcmp(str, SCENE_MODE_AUTO) == 0) {
                 m_bSceneTransitionAuto = true;
+                m_bSceneModeAuto = true;
+            } else {
+                m_bSceneModeAuto = false;
             }
             if (strcmp(str, SCENE_MODE_HDR) == 0) {
                 // If HDR is set from client and the feature is
@@ -4014,7 +4019,8 @@ void QCameraParameters::setPrvwIsoMode(int32_t isoValue)
     int32_t expTimeUs, zslValue;
 
     // Anti-shake algo doesn't work when ZSL is off
-    if (!m_bZslMode)
+    // Also disable for non-auto scenes
+    if (!m_bZslMode || !m_bSceneModeAuto)
         isoValue = CAM_ISO_MODE_AUTO;
 
     // Place precedence on user-set ISO

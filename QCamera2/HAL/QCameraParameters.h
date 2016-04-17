@@ -941,6 +941,7 @@ private:
     int32_t mExposureTime;
     int32_t mPrvwIsoMode;
     int32_t mManualIso;
+    bool m_bSceneModeAuto;
 };
 
 }; // namespace qcamera
