@@ -1089,7 +1089,9 @@ QCamera2HardwareInterface::QCamera2HardwareInterface(uint32_t cameraId)
       mRawdataJob(-1),
       mPreviewFrameSkipValid(0),
       mAdvancedCaptureConfigured(false),
-      mNumPreviewFaces(-1)
+      mNumPreviewFaces(-1),
+      mPreviewFrameSkipValid(0),
+      mCurrFrameCnt(0)
 {
     getLogLevel();
     ATRACE_CALL();

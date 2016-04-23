@@ -647,6 +647,7 @@ private:
     cam_frame_idx_range_t mPreviewFrameSkipIdxRange;
     bool mAdvancedCaptureConfigured;
     int32_t mNumPreviewFaces;
+    uint64_t mCurrFrameCnt;
 };
 
 }; // namespace qcamera
