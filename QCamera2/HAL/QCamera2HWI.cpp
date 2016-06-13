@@ -2196,6 +2196,7 @@ int QCamera2HardwareInterface::startRecording()
 int QCamera2HardwareInterface::stopRecording()
 {
     CDBG_HIGH("%s: E", __func__);
+    m_cbNotifier.flushVideoNotifications();
     int rc = stopChannel(QCAMERA_CH_TYPE_VIDEO);
 
 #ifdef HAS_MULTIMEDIA_HINTS
