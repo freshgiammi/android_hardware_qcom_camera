@@ -30,6 +30,10 @@ LOCAL_CLANG_CFLAGS += \
     -Wno-error=unused-parameter \
     -Wno-error=unused-private-field 
 
+ifeq ($(TARGET_USES_MEDIA_EXTENSIONS), true)
+LOCAL_CFLAGS += -DUSE_MEDIA_EXTENSIONS
+endif
+
 ifeq ($(TARGET_USE_VENDOR_CAMERA_EXT),true)
 LOCAL_CFLAGS += -DUSE_VENDOR_CAMERA_EXT
 endif
