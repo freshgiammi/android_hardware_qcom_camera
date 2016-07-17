@@ -45,6 +45,8 @@
 #define ASD_DEBUG_DATA_SIZE          (100)
 #define STATS_BUFFER_DEBUG_DATA_SIZE (74756)
 
+#define MAX_REAL_SHARPNESS 7 // Cap backend sharpness value to 7 (out of 36)
+
 #define ISO_VAL_AUTO 0
 #define ISO_VAL_100 100
 #define ISO_VAL_200 200
