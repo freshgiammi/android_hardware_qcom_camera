@@ -604,7 +604,7 @@ private:
     bool mPreviewFrameSkipValid;
     cam_frame_idx_range_t mPreviewFrameSkipIdxRange;
     uint64_t mCurrFrameCnt;
-    QCameraVideoMemory *mVideoMem;
+
 };
 
 }; // namespace qcamera
