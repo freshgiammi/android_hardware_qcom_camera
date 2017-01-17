@@ -24,6 +24,12 @@ LOCAL_CFLAGS += -DHAS_MULTIMEDIA_HINTS
 #Debug logs are enabled
 #LOCAL_CFLAGS += -DDISABLE_DEBUG_LOG
 
+LOCAL_CLANG_CFLAGS += \
+    -Wno-error=unused-variable \
+    -Wno-error=sign-compare \
+    -Wno-error=unused-parameter \
+    -Wno-error=unused-private-field 
+
 ifeq ($(TARGET_USE_VENDOR_CAMERA_EXT),true)
 LOCAL_CFLAGS += -DUSE_VENDOR_CAMERA_EXT
 endif
