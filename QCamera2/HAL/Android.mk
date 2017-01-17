@@ -26,6 +26,12 @@ LOCAL_CFLAGS += -DHAS_MULTIMEDIA_HINTS
 #LOCAL_CFLAGS += -DDISABLE_DEBUG_LOG
 =======
 LOCAL_CFLAGS = -Wall -Werror
+LOCAL_CLANG_CFLAGS += \
+    -Wno-error=unused-variable \
+    -Wno-error=sign-compare \
+    -Wno-error=unused-parameter \
+    -Wno-error=unused-private-field 
+    
 # Debug logs are disabled
 LOCAL_CFLAGS += -DDISABLE_DEBUG_LOG
 >>>>>>> 8d10f7be9... QCamera2: Reduce log spam
