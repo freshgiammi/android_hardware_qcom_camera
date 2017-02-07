@@ -1151,6 +1151,23 @@ int QCamera2HardwareInterface::openCamera()
         ALOGE("Failure: Camera already opened");
         return ALREADY_EXISTS;
     }
+    
+        mCameraHandle = camera_open(mCameraId);
+    if (!mCameraHandle) {
+        /* Sometimes, flashlight service checks checks for camera information
+        before qcamerasrv is fully loaded, breaking flashlight/torch.
+        Restart qcamerasrv so the service can initialize camera correctly. */
+        
+        //Check if qcamerasrv is already running. If it's not, don't touch it.
+       property_get("init.svc.qcamerasvr", value, "stopped");
+    if (!strcmp(value, "running")) {
+        //Restart qcamerasrv and wait for 3 seconds
+        property_set("camera.restart.qcamerasvr", "1");
+        usleep(3500 * 1000);
+        mCameraHandle = camera_open(mCameraId);
+        }
+    }
+    
     mCameraHandle = camera_open(mCameraId);
     if (!mCameraHandle) {
         ALOGE("camera_open failed.");
