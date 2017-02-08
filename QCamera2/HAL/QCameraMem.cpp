@@ -33,10 +33,12 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <utils/Errors.h>
+#include <utils/Trace.h>
 #include <gralloc_priv.h>
 #include <QComOMXMetadata.h>
 #include "QCamera2HWI.h"
 #include "QCameraMem.h"
+#include "QCameraParameters.h"
 
 // Media dependencies
 #ifdef USE_MEDIA_EXTENSIONS
@@ -994,7 +996,7 @@ camera_memory_t *QCameraStreamMemory::getMemory(int index, bool metadata) const
 * RETURN     : camera native handle ptr
 *              NULL if not supported or failed
 *==========================================================================*/
-native_handle_t *QCameraVideoMemory::getNativeHandle(uint32_t index, bool metadata)
+native_handle_t *qcamera::QCameraVideoMemory::getNativeHandle(uint32_t index, bool metadata)
 {
     if (index >= mMetaBufCount || (!metadata && index >= mBufferCount)) {
         return NULL;
@@ -1014,7 +1016,7 @@ native_handle_t *QCameraVideoMemory::getNativeHandle(uint32_t index, bool metada
 *              NO_ERROR  -- success
 *              none-zero failure code
 *==========================================================================*/
-int QCameraVideoMemory::closeNativeHandle(const void *data, bool metadata)
+int qcamera::QCameraVideoMemory::closeNativeHandle(const void *data, bool metadata)
 {
     int32_t rc = NO_ERROR;
     int32_t index = -1;
@@ -1055,7 +1057,7 @@ int QCameraVideoMemory::closeNativeHandle(const void *data, bool metadata)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCameraVideoMemory::closeNativeHandle(const void *data)
+int qcamera::QCameraVideoMemory::closeNativeHandle(const void *data)
 {
     int32_t rc = NO_ERROR;
 
@@ -1133,7 +1135,7 @@ void *QCameraStreamMemory::getPtr(int index) const
  *
  * RETURN     : none
  *==========================================================================*/
-QCameraVideoMemory::QCameraVideoMemory(camera_request_memory getMemory,
+qcamera::QCameraVideoMemory::QCameraVideoMemory(camera_request_memory getMemory,
                                        bool cached)
     : QCameraStreamMemory(getMemory, cached)
 {
@@ -1151,7 +1153,7 @@ QCameraVideoMemory::QCameraVideoMemory(camera_request_memory getMemory,
  *
  * RETURN     : none
  *==========================================================================*/
-QCameraVideoMemory::~QCameraVideoMemory()
+qcamera::QCameraVideoMemory::~QCameraVideoMemory()
 {
 }
 
@@ -1168,7 +1170,7 @@ QCameraVideoMemory::~QCameraVideoMemory()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCameraVideoMemory::allocate(int count, int size)
+int qcamera::QCameraVideoMemory::allocate(int count, int size)
 {
     int rc = QCameraStreamMemory::allocate(count, size);
     native_handle_t *nh =  NULL;
@@ -1244,7 +1246,7 @@ int QCameraVideoMemory::allocate(int count, int size)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCameraVideoMemory::allocateMore(int count, int size)
+int qcamera::QCameraVideoMemory::allocateMore(int count, int size)
 {
     int rc = QCameraStreamMemory::allocateMore(count, size);
     if (rc < 0)
@@ -1297,7 +1299,7 @@ int QCameraVideoMemory::allocateMore(int count, int size)
  *
  * RETURN     : none
  *==========================================================================*/
-void QCameraVideoMemory::deallocate()
+void qcamera::QCameraVideoMemory::deallocate()
 {
     for (int i = 0; i < mBufferCount; i ++) {
         media_metadata_buffer * packet =
@@ -1340,7 +1342,7 @@ void QCameraVideoMemory::deallocate()
  * RETURN     : camera memory ptr
  *              NULL if not supported or failed
  *==========================================================================*/
-camera_memory_t *QCameraVideoMemory::getMemory(int index, bool metadata) const
+camera_memory_t *qcamera::QCameraVideoMemory::getMemory(int index, bool metadata) const
 {
     if (index >= mMetaBufCount || (!metadata && index >= mBufferCount))
         return NULL;
@@ -1381,7 +1383,7 @@ camera_memory_t *QCameraVideoMemory::getMemory(int index, bool metadata) const
  * RETURN     : buffer index if match found,
  *              -1 if failed
  *==========================================================================*/
-int QCameraVideoMemory::getMatchBufIndex(const void *opaque,
+int qcamera::QCameraVideoMemory::getMatchBufIndex(const void *opaque,
                                          bool metadata) const
 {
     int index = -1;
@@ -1432,7 +1434,7 @@ int QCameraVideoMemory::getMatchBufIndex(const void *opaque,
  *
  * RETURN     : none
  *==========================================================================*/
-void QCameraVideoMemory::setVideoInfo(int usage, cam_format_t format)
+void qcamera::QCameraVideoMemory::setVideoInfo(int usage, cam_format_t format)
 {
     mUsage = usage;
     mFormat = convCamtoOMXFormat(format);
@@ -1448,7 +1450,7 @@ void QCameraVideoMemory::setVideoInfo(int usage, cam_format_t format)
  *
  * RETURN     : none
  *==========================================================================*/
-int QCameraVideoMemory::convCamtoOMXFormat(cam_format_t format)
+int qcamera::QCameraVideoMemory::convCamtoOMXFormat(cam_format_t format)
 {
     //OMX format is purely based on YUV pattern. For UBWC
     //or any other format change, hint to be provided in the
@@ -1483,7 +1485,7 @@ int QCameraVideoMemory::convCamtoOMXFormat(cam_format_t format)
  *
  * RETURN     : none
  *==========================================================================*/
-QCameraGrallocMemory::QCameraGrallocMemory(camera_request_memory getMemory)
+qcamera::QCameraGrallocMemory::QCameraGrallocMemory(camera_request_memory getMemory)
         : QCameraMemory(true)
 {
     mMinUndequeuedBuffers = 0;
@@ -1507,7 +1509,7 @@ QCameraGrallocMemory::QCameraGrallocMemory(camera_request_memory getMemory)
  *
  * RETURN     : none
  *==========================================================================*/
-QCameraGrallocMemory::~QCameraGrallocMemory()
+qcamera::QCameraGrallocMemory::~QCameraGrallocMemory()
 {
 }
 
@@ -1526,7 +1528,7 @@ QCameraGrallocMemory::~QCameraGrallocMemory()
  *
  * RETURN     : none
  *==========================================================================*/
-void QCameraGrallocMemory::setWindowInfo(preview_stream_ops_t *window,
+void qcamera::QCameraGrallocMemory::setWindowInfo(preview_stream_ops_t *window,
         int width, int height, int stride, int scanline, int format)
 {
     mWindow = window;
@@ -1549,7 +1551,7 @@ void QCameraGrallocMemory::setWindowInfo(preview_stream_ops_t *window,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCameraGrallocMemory::displayBuffer(int index)
+int qcamera::QCameraGrallocMemory::displayBuffer(int index)
 {
     int err = NO_ERROR;
     int dequeuedIdx = BAD_INDEX;
@@ -1600,7 +1602,7 @@ int QCameraGrallocMemory::displayBuffer(int index)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCameraGrallocMemory::allocate(int count, int /*size*/)
+int qcamera::QCameraGrallocMemory::allocate(int count, int /*size*/)
 {
     int err = 0;
     status_t ret = NO_ERROR;
@@ -1787,7 +1789,7 @@ end:
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCameraGrallocMemory::allocateMore(int /*count*/, int /*size*/)
+int qcamera::QCameraGrallocMemory::allocateMore(int /*count*/, int /*size*/)
 {
     ALOGE("%s: Not implenmented yet", __func__);
     return UNKNOWN_ERROR;
@@ -1802,7 +1804,7 @@ int QCameraGrallocMemory::allocateMore(int /*count*/, int /*size*/)
  *
  * RETURN     : none
  *==========================================================================*/
-void QCameraGrallocMemory::deallocate()
+void qcamera::QCameraGrallocMemory::deallocate()
 {
     ALOGI("%s: E ", __FUNCTION__);
 
@@ -1844,7 +1846,7 @@ void QCameraGrallocMemory::deallocate()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCameraGrallocMemory::cacheOps(int index, unsigned int cmd)
+int qcamera::QCameraGrallocMemory::cacheOps(int index, unsigned int cmd)
 {
     if (index >= mBufferCount)
         return BAD_INDEX;
@@ -1863,7 +1865,7 @@ int QCameraGrallocMemory::cacheOps(int index, unsigned int cmd)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCameraGrallocMemory::getRegFlags(uint8_t *regFlags) const
+int qcamera::QCameraGrallocMemory::getRegFlags(uint8_t *regFlags) const
 {
     int i = 0;
     for (i = 0; i < mMinUndequeuedBuffers; i ++)
@@ -1885,7 +1887,7 @@ int QCameraGrallocMemory::getRegFlags(uint8_t *regFlags) const
  * RETURN     : camera memory ptr
  *              NULL if not supported or failed
  *==========================================================================*/
-camera_memory_t *QCameraGrallocMemory::getMemory(int index, bool metadata) const
+camera_memory_t *qcamera::QCameraGrallocMemory::getMemory(int index, bool metadata) const
 {
     if (index >= mBufferCount || metadata)
         return NULL;
@@ -1904,7 +1906,7 @@ camera_memory_t *QCameraGrallocMemory::getMemory(int index, bool metadata) const
  * RETURN     : buffer index if match found,
  *              -1 if failed
  *==========================================================================*/
-int QCameraGrallocMemory::getMatchBufIndex(const void *opaque,
+int qcamera::QCameraGrallocMemory::getMatchBufIndex(const void *opaque,
                                            bool metadata) const
 {
     int index = -1;
@@ -1930,13 +1932,11 @@ int QCameraGrallocMemory::getMatchBufIndex(const void *opaque,
  *
  * RETURN     : buffer ptr
  *==========================================================================*/
-void *QCameraGrallocMemory::getPtr(int index) const
+void *qcamera::QCameraGrallocMemory::getPtr(int index) const
 {
     if (index >= mBufferCount) {
         ALOGE("index out of bound");
         return (void *)BAD_INDEX;
     }
     return mCameraMemory[index]->data;
-}
-
 }; //namespace qcamera
