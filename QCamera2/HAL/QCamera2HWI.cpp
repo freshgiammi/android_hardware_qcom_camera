@@ -1101,7 +1101,7 @@ qcamera::QCamera2HardwareInterface::QCamera2HardwareInterface(uint32_t cameraId)
  *
  * RETURN     : none
  *==========================================================================*/
-qcamera::QCamera2HardwareInterface::~qcamera::QCamera2HardwareInterface()
+qcamera::QCamera2HardwareInterface::~QCamera2HardwareInterface()
 {
     CDBG_HIGH("%s: E", __func__);
     mDefferedWorkThread.sendCmd(CAMERA_CMD_TYPE_STOP_DATA_PROC, TRUE, TRUE);
@@ -7258,4 +7258,5 @@ void qcamera::QCamera2HardwareInterface::getLogLevel()
 cam_sensor_t qcamera::QCamera2HardwareInterface::getSensorType()
 {
     return gCamCapability[mCameraId]->sensor_type.sens_type;
+}
 }; // namespace qcamera
