@@ -1153,6 +1153,76 @@ int qcamera::QCamera2HardwareInterface::openCamera(struct hw_device_t **hw_devic
 }
 
 /*===========================================================================
+ * FUNCTION   : getParameters
+ *
+ * DESCRIPTION: get parameters impl
+ *
+ * PARAMETERS : none
+ *
+ * RETURN     : a string containing parameter pairs
+ *==========================================================================*/
+char* qcamera::QCamera2HardwareInterface::getParameters()
+{
+    char* strParams = NULL;
+    String8 str;
+
+    int cur_width, cur_height;
+    pthread_mutex_lock(&m_parm_lock);
+    //Need take care Scale picture size
+    if(mParameters.m_reprocScaleParam.isScaleEnabled() &&
+        mParameters.m_reprocScaleParam.isUnderScaling()){
+        int scale_width, scale_height;
+
+        mParameters.m_reprocScaleParam.getPicSizeFromAPK(scale_width,scale_height);
+        mParameters.getPictureSize(&cur_width, &cur_height);
+
+        String8 pic_size;
+        char buffer[32];
+        snprintf(buffer, sizeof(buffer), "%dx%d", scale_width, scale_height);
+        pic_size.append(buffer);
+        mParameters.set(CameraParameters::KEY_PICTURE_SIZE, pic_size);
+    }
+
+    str = mParameters.flatten( );
+    strParams = (char *)malloc(sizeof(char)*(str.length()+1));
+    if(strParams != NULL){
+        memset(strParams, 0, sizeof(char)*(str.length()+1));
+        strncpy(strParams, str.string(), str.length());
+        strParams[str.length()] = 0;
+    }
+
+    if(mParameters.m_reprocScaleParam.isScaleEnabled() &&
+        mParameters.m_reprocScaleParam.isUnderScaling()){
+        //need set back picture size
+        String8 pic_size;
+        char buffer[32];
+        snprintf(buffer, sizeof(buffer), "%dx%d", cur_width, cur_height);
+        pic_size.append(buffer);
+        mParameters.set(CameraParameters::KEY_PICTURE_SIZE, pic_size);
+    }
+    pthread_mutex_unlock(&m_parm_lock);
+    return strParams;
+}
+
+/*===========================================================================
+ * FUNCTION   : putParameters
+ *
+ * DESCRIPTION: put parameters string impl
+ *
+ * PARAMETERS :
+ *   @parms   : parameters string to be released
+ *
+ * RETURN     : int32_t type of status
+ *              NO_ERROR  -- success
+ *              none-zero failure code
+ *==========================================================================*/
+int qcamera::QCamera2HardwareInterface::putParameters(char *parms)
+{
+    free(parms);
+    return NO_ERROR;
+}
+
+/*===========================================================================
  * FUNCTION   : openCamera
  *
  * DESCRIPTION: open camera
@@ -3542,76 +3612,6 @@ int qcamera::QCamera2HardwareInterface::cancelLiveSnapshot()
     // stop snapshot channel
     rc = stopChannel(QCAMERA_CH_TYPE_SNAPSHOT);
     return rc;
-}
-
-/*===========================================================================
- * FUNCTION   : getParameters
- *
- * DESCRIPTION: get parameters impl
- *
- * PARAMETERS : none
- *
- * RETURN     : a string containing parameter pairs
- *==========================================================================*/
-char* qcamera::QCamera2HardwareInterface::getParameters()
-{
-    char* strParams = NULL;
-    String8 str;
-
-    int cur_width, cur_height;
-    pthread_mutex_lock(&m_parm_lock);
-    //Need take care Scale picture size
-    if(mParameters.m_reprocScaleParam.isScaleEnabled() &&
-        mParameters.m_reprocScaleParam.isUnderScaling()){
-        int scale_width, scale_height;
-
-        mParameters.m_reprocScaleParam.getPicSizeFromAPK(scale_width,scale_height);
-        mParameters.getPictureSize(&cur_width, &cur_height);
-
-        String8 pic_size;
-        char buffer[32];
-        snprintf(buffer, sizeof(buffer), "%dx%d", scale_width, scale_height);
-        pic_size.append(buffer);
-        mParameters.set(CameraParameters::KEY_PICTURE_SIZE, pic_size);
-    }
-
-    str = mParameters.flatten( );
-    strParams = (char *)malloc(sizeof(char)*(str.length()+1));
-    if(strParams != NULL){
-        memset(strParams, 0, sizeof(char)*(str.length()+1));
-        strncpy(strParams, str.string(), str.length());
-        strParams[str.length()] = 0;
-    }
-
-    if(mParameters.m_reprocScaleParam.isScaleEnabled() &&
-        mParameters.m_reprocScaleParam.isUnderScaling()){
-        //need set back picture size
-        String8 pic_size;
-        char buffer[32];
-        snprintf(buffer, sizeof(buffer), "%dx%d", cur_width, cur_height);
-        pic_size.append(buffer);
-        mParameters.set(CameraParameters::KEY_PICTURE_SIZE, pic_size);
-    }
-    pthread_mutex_unlock(&m_parm_lock);
-    return strParams;
-}
-
-/*===========================================================================
- * FUNCTION   : putParameters
- *
- * DESCRIPTION: put parameters string impl
- *
- * PARAMETERS :
- *   @parms   : parameters string to be released
- *
- * RETURN     : int32_t type of status
- *              NO_ERROR  -- success
- *              none-zero failure code
- *==========================================================================*/
-int qcamera::QCamera2HardwareInterface::putParameters(char *parms)
-{
-    free(parms);
-    return NO_ERROR;
 }
 
 /*===========================================================================
