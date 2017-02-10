@@ -425,43 +425,11 @@ int qcamera::QCamera2HardwareInterface::start_recording(struct camera_device *de
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    int width, height;
-    qcamera::QCamera2HardwareInterface *hw =
-        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
+    QCamera2HardwareInterface *hw =
+        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
-    }
-    // Preview window changes for 720p and higher
-    hw->mParameters.getVideoSize(&width, &height);
-    if ((width * height) >= (1280 * 720)) {
-        char *orig_params = hw->getParameters();
-        if (orig_params) {
-            android::CameraParameters params;
-            params.unflatten(android::String8(orig_params));
-            hw->putParameters(orig_params);
-
-            // Set preview size and picture size to video size
-            char video_dim[10];
-            snprintf(video_dim, sizeof(video_dim), "%dx%d", width, height);
-            params.set("preview-size", video_dim);
-            params.set("picture-size", video_dim);
-
-            const char *hfrStr = params.get("video-hfr");
-            const char *hsrStr = params.get("video-hsr");
-
-            // Use yuv420sp for high framerates
-            if ((hfrStr != NULL && strcmp(hfrStr, "off")) ||
-                (hsrStr != NULL && strcmp(hsrStr, "off")))
-                params.set("preview-format", "yuv420sp");
-            else
-                params.set("preview-format", "nv12-venus");
-
-            hw->set_parameters(device, params.flatten().string());
-            // Restart preview to propagate changes to preview window
-            hw->stop_preview(device);
-            hw->start_preview(device);
-        }
     }
     CDBG_HIGH("[KPI Perf] %s: E PROFILE_START_RECORDING", __func__);
     hw->lockAPI();
@@ -810,20 +778,6 @@ char* QCamera2HardwareInterface::get_parameters(struct camera_device *device)
     if (rc == NO_ERROR) {
         hw->waitAPIResult(QCAMERA_SM_EVT_GET_PARAMS, &apiResult);
         ret = apiResult.params;
-        
-        // Mask nv12-venus to userspace to prevent framework crash
-        if (hw->mParameters.getRecordingHintValue()) {
-            int width, height;
-            hw->mParameters.getVideoSize(&width, &height);
-            if ((width * height) >= (1280 * 720)) {
-                android::CameraParameters params;
-                params.unflatten(android::String8(hw->m_apiResult.params));
-                params.set("preview-format", "yuv420sp");
-                ret = strdup(params.flatten().string());
-            }
-          }
-        if (ret == NULL)
-            ret = hw->m_apiResult.params;
     }
     hw->unlockAPI();
 
