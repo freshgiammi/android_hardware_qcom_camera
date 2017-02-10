@@ -62,36 +62,36 @@ qcamera_saved_sizes_list savedSizes[MM_CAMERA_MAX_NUM_SENSORS];
 static pthread_mutex_t g_camlock = PTHREAD_MUTEX_INITIALIZER;
 volatile uint32_t gCamHalLogLevel = 0;
 
-camera_device_ops_t QCamera2HardwareInterface::mCameraOps = {
-    .set_preview_window =         QCamera2HardwareInterface::set_preview_window,
-    .set_callbacks =              QCamera2HardwareInterface::set_CallBacks,
-    .enable_msg_type =            QCamera2HardwareInterface::enable_msg_type,
-    .disable_msg_type =           QCamera2HardwareInterface::disable_msg_type,
-    .msg_type_enabled =           QCamera2HardwareInterface::msg_type_enabled,
+camera_device_ops_t qcamera::QCamera2HardwareInterface::mCameraOps = {
+    .set_preview_window =         qcamera::QCamera2HardwareInterface::set_preview_window,
+    .set_callbacks =              qcamera::QCamera2HardwareInterface::set_CallBacks,
+    .enable_msg_type =            qcamera::QCamera2HardwareInterface::enable_msg_type,
+    .disable_msg_type =           qcamera::QCamera2HardwareInterface::disable_msg_type,
+    .msg_type_enabled =           qcamera::QCamera2HardwareInterface::msg_type_enabled,
 
-    .start_preview =              QCamera2HardwareInterface::start_preview,
-    .stop_preview =               QCamera2HardwareInterface::stop_preview,
-    .preview_enabled =            QCamera2HardwareInterface::preview_enabled,
-    .store_meta_data_in_buffers = QCamera2HardwareInterface::store_meta_data_in_buffers,
+    .start_preview =              qcamera::QCamera2HardwareInterface::start_preview,
+    .stop_preview =               qcamera::QCamera2HardwareInterface::stop_preview,
+    .preview_enabled =            qcamera::QCamera2HardwareInterface::preview_enabled,
+    .store_meta_data_in_buffers = qcamera::QCamera2HardwareInterface::store_meta_data_in_buffers,
 
-    .start_recording =            QCamera2HardwareInterface::start_recording,
-    .stop_recording =             QCamera2HardwareInterface::stop_recording,
-    .recording_enabled =          QCamera2HardwareInterface::recording_enabled,
-    .release_recording_frame =    QCamera2HardwareInterface::release_recording_frame,
+    .start_recording =            qcamera::QCamera2HardwareInterface::start_recording,
+    .stop_recording =             qcamera::QCamera2HardwareInterface::stop_recording,
+    .recording_enabled =          qcamera::QCamera2HardwareInterface::recording_enabled,
+    .release_recording_frame =    qcamera::QCamera2HardwareInterface::release_recording_frame,
 
-    .auto_focus =                 QCamera2HardwareInterface::auto_focus,
-    .cancel_auto_focus =          QCamera2HardwareInterface::cancel_auto_focus,
+    .auto_focus =                 qcamera::QCamera2HardwareInterface::auto_focus,
+    .cancel_auto_focus =          qcamera::QCamera2HardwareInterface::cancel_auto_focus,
 
-    .take_picture =               QCamera2HardwareInterface::take_picture,
-    .cancel_picture =             QCamera2HardwareInterface::cancel_picture,
+    .take_picture =               qcamera::QCamera2HardwareInterface::take_picture,
+    .cancel_picture =             qcamera::QCamera2HardwareInterface::cancel_picture,
 
-    .set_parameters =             QCamera2HardwareInterface::set_parameters,
-    .get_parameters =             QCamera2HardwareInterface::get_parameters,
-    .put_parameters =             QCamera2HardwareInterface::put_parameters,
-    .send_command =               QCamera2HardwareInterface::send_command,
+    .set_parameters =             qcamera::QCamera2HardwareInterface::set_parameters,
+    .get_parameters =             qcamera::QCamera2HardwareInterface::get_parameters,
+    .put_parameters =             qcamera::QCamera2HardwareInterface::put_parameters,
+    .send_command =               qcamera::QCamera2HardwareInterface::send_command,
 
-    .release =                    QCamera2HardwareInterface::release,
-    .dump =                       QCamera2HardwareInterface::dump,
+    .release =                    qcamera::QCamera2HardwareInterface::release,
+    .dump =                       qcamera::QCamera2HardwareInterface::dump,
 };
 
 /*===========================================================================
@@ -107,13 +107,13 @@ camera_device_ops_t QCamera2HardwareInterface::mCameraOps = {
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::set_preview_window(struct camera_device *device,
+int qcamera::QCamera2HardwareInterface::set_preview_window(struct camera_device *device,
         struct preview_stream_ops *window)
 {
     ATRACE_CALL();
     int rc = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("%s: NULL camera device", __func__);
         return BAD_VALUE;
@@ -146,7 +146,7 @@ int QCamera2HardwareInterface::set_preview_window(struct camera_device *device,
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::set_CallBacks(struct camera_device *device,
+void qcamera::QCamera2HardwareInterface::set_CallBacks(struct camera_device *device,
         camera_notify_callback notify_cb,
         camera_data_callback data_cb,
         camera_data_timestamp_callback data_cb_timestamp,
@@ -154,8 +154,8 @@ void QCamera2HardwareInterface::set_CallBacks(struct camera_device *device,
         void *user)
 {
     ATRACE_CALL();
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return;
@@ -188,11 +188,11 @@ void QCamera2HardwareInterface::set_CallBacks(struct camera_device *device,
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::enable_msg_type(struct camera_device *device, int32_t msg_type)
+void qcamera::QCamera2HardwareInterface::enable_msg_type(struct camera_device *device, int32_t msg_type)
 {
     ATRACE_CALL();
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return;
@@ -217,11 +217,11 @@ void QCamera2HardwareInterface::enable_msg_type(struct camera_device *device, in
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::disable_msg_type(struct camera_device *device, int32_t msg_type)
+void qcamera::QCamera2HardwareInterface::disable_msg_type(struct camera_device *device, int32_t msg_type)
 {
     ATRACE_CALL();
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return;
@@ -247,12 +247,12 @@ void QCamera2HardwareInterface::disable_msg_type(struct camera_device *device, i
  * RETURN     : 1 -- enabled
  *              0 -- not enabled
  *==========================================================================*/
-int QCamera2HardwareInterface::msg_type_enabled(struct camera_device *device, int32_t msg_type)
+int qcamera::QCamera2HardwareInterface::msg_type_enabled(struct camera_device *device, int32_t msg_type)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -281,12 +281,12 @@ int QCamera2HardwareInterface::msg_type_enabled(struct camera_device *device, in
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::start_preview(struct camera_device *device)
+int qcamera::QCamera2HardwareInterface::start_preview(struct camera_device *device)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -319,11 +319,11 @@ int QCamera2HardwareInterface::start_preview(struct camera_device *device)
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::stop_preview(struct camera_device *device)
+void qcamera::QCamera2HardwareInterface::stop_preview(struct camera_device *device)
 {
     ATRACE_CALL();
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return;
@@ -350,12 +350,12 @@ void QCamera2HardwareInterface::stop_preview(struct camera_device *device)
  * RETURN     : 1 -- running
  *              0 -- not running
  *==========================================================================*/
-int QCamera2HardwareInterface::preview_enabled(struct camera_device *device)
+int qcamera::QCamera2HardwareInterface::preview_enabled(struct camera_device *device)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -386,12 +386,12 @@ int QCamera2HardwareInterface::preview_enabled(struct camera_device *device)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::store_meta_data_in_buffers(
+int qcamera::QCamera2HardwareInterface::store_meta_data_in_buffers(
                 struct camera_device *device, int enable)
 {
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -421,13 +421,13 @@ int QCamera2HardwareInterface::store_meta_data_in_buffers(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::start_recording(struct camera_device *device)
+int qcamera::QCamera2HardwareInterface::start_recording(struct camera_device *device)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
     int width, height;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -487,11 +487,11 @@ int QCamera2HardwareInterface::start_recording(struct camera_device *device)
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::stop_recording(struct camera_device *device)
+void qcamera::QCamera2HardwareInterface::stop_recording(struct camera_device *device)
 {
     ATRACE_CALL();
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return;
@@ -518,12 +518,12 @@ void QCamera2HardwareInterface::stop_recording(struct camera_device *device)
  * RETURN     : 1 -- running
  *              0 -- not running
  *==========================================================================*/
-int QCamera2HardwareInterface::recording_enabled(struct camera_device *device)
+int qcamera::QCamera2HardwareInterface::recording_enabled(struct camera_device *device)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -551,13 +551,13 @@ int QCamera2HardwareInterface::recording_enabled(struct camera_device *device)
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::release_recording_frame(
+void qcamera::QCamera2HardwareInterface::release_recording_frame(
             struct camera_device *device, const void *opaque)
 {
     ATRACE_CALL();
     int32_t ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return;
@@ -602,12 +602,12 @@ void QCamera2HardwareInterface::release_recording_frame(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::auto_focus(struct camera_device *device)
+int qcamera::QCamera2HardwareInterface::auto_focus(struct camera_device *device)
 {
     ATRACE_INT("Camera:AutoFocus", 1);
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -638,12 +638,12 @@ int QCamera2HardwareInterface::auto_focus(struct camera_device *device)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::cancel_auto_focus(struct camera_device *device)
+int qcamera::QCamera2HardwareInterface::cancel_auto_focus(struct camera_device *device)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -673,12 +673,12 @@ int QCamera2HardwareInterface::cancel_auto_focus(struct camera_device *device)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::take_picture(struct camera_device *device)
+int qcamera::QCamera2HardwareInterface::take_picture(struct camera_device *device)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -725,12 +725,12 @@ int QCamera2HardwareInterface::take_picture(struct camera_device *device)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::cancel_picture(struct camera_device *device)
+int qcamera::QCamera2HardwareInterface::cancel_picture(struct camera_device *device)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -761,13 +761,13 @@ int QCamera2HardwareInterface::cancel_picture(struct camera_device *device)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::set_parameters(struct camera_device *device,
+int qcamera::QCamera2HardwareInterface::set_parameters(struct camera_device *device,
                                               const char *parms)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -798,8 +798,8 @@ char* QCamera2HardwareInterface::get_parameters(struct camera_device *device)
 {
     ATRACE_CALL();
     char *ret = NULL;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return NULL;
@@ -842,12 +842,12 @@ char* QCamera2HardwareInterface::get_parameters(struct camera_device *device)
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::put_parameters(struct camera_device *device,
+void qcamera::QCamera2HardwareInterface::put_parameters(struct camera_device *device,
                                                char *parm)
 {
     ATRACE_CALL();
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return;
@@ -876,15 +876,15 @@ void QCamera2HardwareInterface::put_parameters(struct camera_device *device,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::send_command(struct camera_device *device,
+int qcamera::QCamera2HardwareInterface::send_command(struct camera_device *device,
                                             int32_t cmd,
                                             int32_t arg1,
                                             int32_t arg2)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -917,11 +917,11 @@ int QCamera2HardwareInterface::send_command(struct camera_device *device,
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::release(struct camera_device *device)
+void qcamera::QCamera2HardwareInterface::release(struct camera_device *device)
 {
     ATRACE_CALL();
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return;
@@ -948,7 +948,7 @@ void QCamera2HardwareInterface::release(struct camera_device *device)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::dump(struct camera_device *device, int fd)
+int qcamera::QCamera2HardwareInterface::dump(struct camera_device *device, int fd)
 {
     int ret = NO_ERROR;
 
@@ -956,8 +956,8 @@ int QCamera2HardwareInterface::dump(struct camera_device *device, int fd)
     //called so that the log level can be controlled without restarting
     //media server
     getLogLevel();
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -986,13 +986,13 @@ int QCamera2HardwareInterface::dump(struct camera_device *device, int fd)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::close_camera_device(hw_device_t *hw_dev)
+int qcamera::QCamera2HardwareInterface::close_camera_device(hw_device_t *hw_dev)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
     CDBG_HIGH("[KPI Perf] %s: E",__func__);
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(
             reinterpret_cast<camera_device_t *>(hw_dev)->priv);
     if (!hw) {
         ALOGE("%s: NULL camera device", __func__);
@@ -1017,14 +1017,14 @@ int QCamera2HardwareInterface::close_camera_device(hw_device_t *hw_dev)
  * RETURN     : >=0 unique ID of face registerd.
  *              <0  failure.
  *==========================================================================*/
-int QCamera2HardwareInterface::register_face_image(struct camera_device *device,
+int qcamera::QCamera2HardwareInterface::register_face_image(struct camera_device *device,
                                                    void *img_ptr,
                                                    cam_pp_offline_src_config_t *config)
 {
     ATRACE_CALL();
     int ret = NO_ERROR;
-    QCamera2HardwareInterface *hw =
-        reinterpret_cast<QCamera2HardwareInterface *>(device->priv);
+    qcamera::QCamera2HardwareInterface *hw =
+        reinterpret_cast<qcamera::QCamera2HardwareInterface *>(device->priv);
     if (!hw) {
         ALOGE("NULL camera device");
         return BAD_VALUE;
@@ -1046,16 +1046,16 @@ int QCamera2HardwareInterface::register_face_image(struct camera_device *device,
 }
 
 /*===========================================================================
- * FUNCTION   : QCamera2HardwareInterface
+ * FUNCTION   : qcamera::QCamera2HardwareInterface
  *
- * DESCRIPTION: constructor of QCamera2HardwareInterface
+ * DESCRIPTION: constructor of qcamera::QCamera2HardwareInterface
  *
  * PARAMETERS :
  *   @cameraId  : camera ID
  *
  * RETURN     : none
  *==========================================================================*/
-QCamera2HardwareInterface::QCamera2HardwareInterface(uint32_t cameraId)
+qcamera::QCamera2HardwareInterface::QCamera2HardwareInterface(uint32_t cameraId)
     : mCameraId(cameraId),
       mCameraHandle(NULL),
       mCameraOpened(false),
@@ -1140,15 +1140,15 @@ QCamera2HardwareInterface::QCamera2HardwareInterface(uint32_t cameraId)
 }
 
 /*===========================================================================
- * FUNCTION   : ~QCamera2HardwareInterface
+ * FUNCTION   : ~qcamera::QCamera2HardwareInterface
  *
- * DESCRIPTION: destructor of QCamera2HardwareInterface
+ * DESCRIPTION: destructor of qcamera::QCamera2HardwareInterface
  *
  * PARAMETERS : none
  *
  * RETURN     : none
  *==========================================================================*/
-QCamera2HardwareInterface::~QCamera2HardwareInterface()
+qcamera::QCamera2HardwareInterface::~qcamera::QCamera2HardwareInterface()
 {
     CDBG_HIGH("%s: E", __func__);
     mDefferedWorkThread.sendCmd(CAMERA_CMD_TYPE_STOP_DATA_PROC, TRUE, TRUE);
@@ -1178,7 +1178,7 @@ QCamera2HardwareInterface::~QCamera2HardwareInterface()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::openCamera(struct hw_device_t **hw_device)
+int qcamera::QCamera2HardwareInterface::openCamera(struct hw_device_t **hw_device)
 {
     ATRACE_CALL();
     int rc = NO_ERROR;
@@ -1210,7 +1210,7 @@ int QCamera2HardwareInterface::openCamera(struct hw_device_t **hw_device)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::openCamera()
+int qcamera::QCamera2HardwareInterface::openCamera()
 {
     int32_t l_curr_width = 0;
     int32_t l_curr_height = 0;
@@ -1356,7 +1356,7 @@ int QCamera2HardwareInterface::openCamera()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::closeCamera()
+int qcamera::QCamera2HardwareInterface::closeCamera()
 {
     int rc = NO_ERROR;
     int i;
@@ -1491,16 +1491,16 @@ static cam_dimension_t new_prvw_sizes_cam1[] = {
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::initCapabilities(uint32_t cameraId,
+int qcamera::QCamera2HardwareInterface::initCapabilities(uint32_t cameraId,
         mm_camera_vtbl_t *cameraHandle)
 {
     ATRACE_CALL();
     int rc = NO_ERROR;
-    QCameraHeapMemory *capabilityHeap = NULL;
+    qcamera::QCameraHeapMemory *capabilityHeap = NULL;
     size_t i, x;
 
     /* Allocate memory for capability buffer */
-    capabilityHeap = new QCameraHeapMemory(QCAMERA_ION_USE_CACHE);
+    capabilityHeap = new qcamera::QCameraHeapMemory(QCAMERA_ION_USE_CACHE);
     rc = capabilityHeap->allocate(1, sizeof(cam_capability_t));
     if(rc != OK) {
         ALOGE("%s: No memory for cappability", __func__);
@@ -1614,7 +1614,7 @@ allocate_failed:
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::getCapabilities(uint32_t cameraId,
+int qcamera::QCamera2HardwareInterface::getCapabilities(uint32_t cameraId,
         struct camera_info *info)
 {
     ATRACE_CALL();
@@ -1639,7 +1639,7 @@ int QCamera2HardwareInterface::getCapabilities(uint32_t cameraId,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::prepareTorchCamera()
+int qcamera::QCamera2HardwareInterface::prepareTorchCamera()
 {
     int rc = NO_ERROR;
 
@@ -1664,7 +1664,7 @@ int QCamera2HardwareInterface::prepareTorchCamera()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::releaseTorchCamera()
+int qcamera::QCamera2HardwareInterface::releaseTorchCamera()
 {
     if ( !m_stateMachine.isPreviewRunning() &&
             !m_stateMachine.isPreviewReady() &&
@@ -1686,7 +1686,7 @@ int QCamera2HardwareInterface::releaseTorchCamera()
  *
  * RETURN     : number of buffers needed
  *==========================================================================*/
-uint8_t QCamera2HardwareInterface::getBufNumRequired(cam_stream_type_t stream_type)
+uint8_t qcamera::QCamera2HardwareInterface::getBufNumRequired(cam_stream_type_t stream_type)
 {
     int bufferCnt = 0;
     int minCaptureBuffers = mParameters.getNumOfSnapshots();
@@ -1873,12 +1873,12 @@ uint8_t QCamera2HardwareInterface::getBufNumRequired(cam_stream_type_t stream_ty
  * RETURN     : ptr to a memory obj that holds stream buffers.
  *              NULL if failed
  *==========================================================================*/
-QCameraMemory *QCamera2HardwareInterface::allocateStreamBuf(
+qcamera::QCameraMemory *qcamera::QCamera2HardwareInterface::allocateStreamBuf(
         cam_stream_type_t stream_type, size_t size, int stride, int scanline,
         uint8_t &bufferCnt)
 {
     int rc = NO_ERROR;
-    QCameraMemory *mem = NULL;
+    qcamera::QCameraMemory *mem = NULL;
     bool bCachedMem = QCAMERA_ION_USE_CACHE;
     bool bPoolMem = false;
     char value[PROPERTY_VALUE_MAX];
@@ -1992,8 +1992,8 @@ QCameraMemory *QCamera2HardwareInterface::allocateStreamBuf(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::allocateMoreStreamBuf(
-        QCameraMemory *mem_obj, size_t size, uint8_t &bufferCnt)
+int32_t qcamera::QCamera2HardwareInterface::allocateMoreStreamBuf(
+        qcamera::QCameraMemory *mem_obj, size_t size, uint8_t &bufferCnt)
 {
     int rc = NO_ERROR;
 
@@ -2015,11 +2015,11 @@ int32_t QCamera2HardwareInterface::allocateMoreStreamBuf(
  * RETURN     : ptr to a memory obj that holds stream info buffer.
  *              NULL if failed
  *==========================================================================*/
-QCameraHeapMemory *QCamera2HardwareInterface::allocateStreamInfoBuf(
+qcamera::QCameraHeapMemory *qcamera::QCamera2HardwareInterface::allocateStreamInfoBuf(
     cam_stream_type_t stream_type)
 {
     int rc = NO_ERROR;
-    QCameraHeapMemory *streamInfoBuf = new QCameraHeapMemory(QCAMERA_ION_USE_CACHE);
+    qcamera::QCameraHeapMemory *streamInfoBuf = new qcamera::QCameraHeapMemory(QCAMERA_ION_USE_CACHE);
     if (!streamInfoBuf) {
         ALOGE("allocateStreamInfoBuf: Unable to allocate streamInfo object");
         return NULL;
@@ -2122,7 +2122,7 @@ QCameraHeapMemory *QCamera2HardwareInterface::allocateStreamInfoBuf(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::setPreviewWindow(
+int qcamera::QCamera2HardwareInterface::setPreviewWindow(
         struct preview_stream_ops *window)
 {
     mPreviewWindow = window;
@@ -2145,7 +2145,7 @@ int QCamera2HardwareInterface::setPreviewWindow(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::setCallBacks(camera_notify_callback notify_cb,
+int qcamera::QCamera2HardwareInterface::setCallBacks(camera_notify_callback notify_cb,
                                             camera_data_callback data_cb,
                                             camera_data_timestamp_callback data_cb_timestamp,
                                             camera_request_memory get_memory,
@@ -2172,7 +2172,7 @@ int QCamera2HardwareInterface::setCallBacks(camera_notify_callback notify_cb,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::enableMsgType(int32_t msg_type)
+int qcamera::QCamera2HardwareInterface::enableMsgType(int32_t msg_type)
 {
     mMsgEnabled |= msg_type;
     CDBG_HIGH("%s (0x%x) : mMsgEnabled = 0x%x", __func__, msg_type , mMsgEnabled );
@@ -2191,7 +2191,7 @@ int QCamera2HardwareInterface::enableMsgType(int32_t msg_type)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::disableMsgType(int32_t msg_type)
+int qcamera::QCamera2HardwareInterface::disableMsgType(int32_t msg_type)
 {
     mMsgEnabled &= ~msg_type;
     CDBG_HIGH("%s (0x%x) : mMsgEnabled = 0x%x", __func__, msg_type , mMsgEnabled );
@@ -2209,7 +2209,7 @@ int QCamera2HardwareInterface::disableMsgType(int32_t msg_type)
  * RETURN     : 0 -- not enabled
  *              none 0 -- enabled
  *==========================================================================*/
-int QCamera2HardwareInterface::msgTypeEnabled(int32_t msg_type)
+int qcamera::QCamera2HardwareInterface::msgTypeEnabled(int32_t msg_type)
 {
     return (mMsgEnabled & msg_type);
 }
@@ -2225,7 +2225,7 @@ int QCamera2HardwareInterface::msgTypeEnabled(int32_t msg_type)
  * RETURN     : 0 -- not enabled
  *              none 0 -- enabled
  *==========================================================================*/
-int QCamera2HardwareInterface::msgTypeEnabledWithLock(int32_t msg_type)
+int qcamera::QCamera2HardwareInterface::msgTypeEnabledWithLock(int32_t msg_type)
 {
     int enabled = 0;
     lockAPI();
@@ -2245,7 +2245,7 @@ int QCamera2HardwareInterface::msgTypeEnabledWithLock(int32_t msg_type)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::startPreview()
+int qcamera::QCamera2HardwareInterface::startPreview()
 {
     ATRACE_CALL();
     int32_t rc = NO_ERROR;
@@ -2280,7 +2280,7 @@ int QCamera2HardwareInterface::startPreview()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::stopPreview()
+int qcamera::QCamera2HardwareInterface::stopPreview()
 {
     ATRACE_CALL();
     CDBG_HIGH("%s: E", __func__);
@@ -2313,7 +2313,7 @@ int QCamera2HardwareInterface::stopPreview()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::storeMetaDataInBuffers(int enable)
+int qcamera::QCamera2HardwareInterface::storeMetaDataInBuffers(int enable)
 {
     mStoreMetaDataInFrame = enable;
     return NO_ERROR;
@@ -2330,7 +2330,7 @@ int QCamera2HardwareInterface::storeMetaDataInBuffers(int enable)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::startRecording()
+int qcamera::QCamera2HardwareInterface::startRecording()
 {
     int32_t rc = NO_ERROR;
     mVideoMem = NULL;
@@ -2375,7 +2375,7 @@ int QCamera2HardwareInterface::startRecording()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::stopRecording()
+int qcamera::QCamera2HardwareInterface::stopRecording()
 {
     CDBG_HIGH("%s: E", __func__);
     m_cbNotifier.flushVideoNotifications();
@@ -2406,7 +2406,7 @@ int QCamera2HardwareInterface::stopRecording()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::releaseRecordingFrame(const void * opaque)
+int qcamera::QCamera2HardwareInterface::releaseRecordingFrame(const void * opaque)
 {
     int32_t rc = UNKNOWN_ERROR;
     QCameraVideoChannel *pChannel =
@@ -2429,7 +2429,7 @@ int QCamera2HardwareInterface::releaseRecordingFrame(const void * opaque)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::autoFocus()
+int qcamera::QCamera2HardwareInterface::autoFocus()
 {
     int rc = NO_ERROR;
     setCancelAutoFocus(false);
@@ -2467,7 +2467,7 @@ int QCamera2HardwareInterface::autoFocus()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::cancelAutoFocus()
+int qcamera::QCamera2HardwareInterface::cancelAutoFocus()
 {
     int rc = NO_ERROR;
     setCancelAutoFocus(true);
@@ -2506,7 +2506,7 @@ int QCamera2HardwareInterface::cancelAutoFocus()
  *
  * NOTE       : none
  *==========================================================================*/
-bool QCamera2HardwareInterface::processUFDumps(qcamera_jpeg_evt_payload_t *evt)
+bool qcamera::QCamera2HardwareInterface::processUFDumps(qcamera_jpeg_evt_payload_t *evt)
 {
    bool ret = true;
    if (mParameters.isUbiRefocus()) {
@@ -2566,7 +2566,7 @@ bool QCamera2HardwareInterface::processUFDumps(qcamera_jpeg_evt_payload_t *evt)
  *
  * NOTE       : none
  *==========================================================================*/
-bool QCamera2HardwareInterface::processMTFDumps(qcamera_jpeg_evt_payload_t *evt)
+bool qcamera::QCamera2HardwareInterface::processMTFDumps(qcamera_jpeg_evt_payload_t *evt)
 {
    bool ret = true;
    if (mParameters.isMTFRefocus()) {
@@ -2623,7 +2623,7 @@ bool QCamera2HardwareInterface::processMTFDumps(qcamera_jpeg_evt_payload_t *evt)
  *              none-zero failure code
  *
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::unconfigureAdvancedCapture()
+int32_t qcamera::QCamera2HardwareInterface::unconfigureAdvancedCapture()
 {
     int32_t rc = NO_ERROR;
 
@@ -2669,7 +2669,7 @@ int32_t QCamera2HardwareInterface::unconfigureAdvancedCapture()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::configureAdvancedCapture()
+int32_t qcamera::QCamera2HardwareInterface::configureAdvancedCapture()
 {
     CDBG_HIGH("%s: E",__func__);
     int32_t rc = NO_ERROR;
@@ -2716,7 +2716,7 @@ int32_t QCamera2HardwareInterface::configureAdvancedCapture()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::configureAFBracketing(bool enable)
+int32_t qcamera::QCamera2HardwareInterface::configureAFBracketing(bool enable)
 {
     CDBG_HIGH("%s: E",__func__);
     int32_t rc = NO_ERROR;
@@ -2760,7 +2760,7 @@ int32_t QCamera2HardwareInterface::configureAFBracketing(bool enable)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::configureMTFBracketing(bool enable)
+int32_t qcamera::QCamera2HardwareInterface::configureMTFBracketing(bool enable)
 {
     int32_t rc = NO_ERROR;
     cam_af_bracketing_t *mtf_bracketing_need;
@@ -2809,7 +2809,7 @@ int32_t QCamera2HardwareInterface::configureMTFBracketing(bool enable)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::configureFlashBracketing(bool enable)
+int32_t qcamera::QCamera2HardwareInterface::configureFlashBracketing(bool enable)
 {
     CDBG_HIGH("%s: E",__func__);
     int32_t rc = NO_ERROR;
@@ -2839,7 +2839,7 @@ int32_t QCamera2HardwareInterface::configureFlashBracketing(bool enable)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::configureZSLHDRBracketing()
+int32_t qcamera::QCamera2HardwareInterface::configureZSLHDRBracketing()
 {
     CDBG_HIGH("%s: E",__func__);
     int32_t rc = NO_ERROR;
@@ -2899,7 +2899,7 @@ int32_t QCamera2HardwareInterface::configureZSLHDRBracketing()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::configureAEBracketing()
+int32_t qcamera::QCamera2HardwareInterface::configureAEBracketing()
 {
     CDBG_HIGH("%s: E",__func__);
     int32_t rc = NO_ERROR;
@@ -2924,7 +2924,7 @@ int32_t QCamera2HardwareInterface::configureAEBracketing()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::configureOptiZoom()
+int32_t qcamera::QCamera2HardwareInterface::configureOptiZoom()
 {
     int32_t rc = NO_ERROR;
 
@@ -2951,7 +2951,7 @@ int32_t QCamera2HardwareInterface::configureOptiZoom()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*///TODO_fssr: place holder check the req for fssr
-int32_t QCamera2HardwareInterface::configureFssr()
+int32_t qcamera::QCamera2HardwareInterface::configureFssr()
 {
     int32_t rc = NO_ERROR;
 
@@ -2979,7 +2979,7 @@ int32_t QCamera2HardwareInterface::configureFssr()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::startAdvancedCapture(
+int32_t qcamera::QCamera2HardwareInterface::startAdvancedCapture(
     QCameraPicChannel *pChannel)
 {
     CDBG_HIGH("%s: Start bracketig",__func__);
@@ -3015,7 +3015,7 @@ int32_t QCamera2HardwareInterface::startAdvancedCapture(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::takePicture()
+int qcamera::QCamera2HardwareInterface::takePicture()
 {
     int rc = NO_ERROR;
     uint8_t numSnapshots = mParameters.getNumOfSnapshots();
@@ -3214,7 +3214,7 @@ int QCamera2HardwareInterface::takePicture()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::longShot()
+int32_t qcamera::QCamera2HardwareInterface::longShot()
 {
     int32_t rc = NO_ERROR;
     uint8_t numSnapshots = mParameters.getNumOfSnapshots();
@@ -3251,7 +3251,7 @@ end:
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::stopCaptureChannel(bool destroy)
+int qcamera::QCamera2HardwareInterface::stopCaptureChannel(bool destroy)
 {
     if (mParameters.isJpegPictureFormat() ||
         mParameters.isNV16PictureFormat() ||
@@ -3277,7 +3277,7 @@ int QCamera2HardwareInterface::stopCaptureChannel(bool destroy)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::cancelPicture()
+int qcamera::QCamera2HardwareInterface::cancelPicture()
 {
     CDBG_HIGH("%s:%d] ",__func__, __LINE__);
     waitDefferedWork(mReprocJob);
@@ -3321,7 +3321,7 @@ int QCamera2HardwareInterface::cancelPicture()
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::captureDone()
+void qcamera::QCamera2HardwareInterface::captureDone()
 {
     if (++mOutputCount >= mParameters.getBurstCountForAdvancedCapture()) {
         unconfigureAdvancedCapture();
@@ -3333,14 +3333,14 @@ void QCamera2HardwareInterface::captureDone()
  *
  * DESCRIPTION: Seperate thread for taking live snapshot during recording
  *
- * PARAMETERS : @data - pointer to QCamera2HardwareInterface class object
+ * PARAMETERS : @data - pointer to qcamera::QCamera2HardwareInterface class object
  *
  * RETURN     : none
  *==========================================================================*/
 void* Live_Snapshot_thread (void* data)
 {
 
-    QCamera2HardwareInterface *hw = reinterpret_cast<QCamera2HardwareInterface *>(data);
+    qcamera::QCamera2HardwareInterface *hw = reinterpret_cast<qcamera::QCamera2HardwareInterface *>(data);
     if (!hw) {
         ALOGE("take_picture_thread: NULL camera device");
         return (void *)BAD_VALUE;
@@ -3354,14 +3354,14 @@ void* Live_Snapshot_thread (void* data)
  *
  * DESCRIPTION: Seperate thread for taking snapshot triggered by camera backend
  *
- * PARAMETERS : @data - pointer to QCamera2HardwareInterface class object
+ * PARAMETERS : @data - pointer to qcamera::QCamera2HardwareInterface class object
  *
  * RETURN     : none
  *==========================================================================*/
 void* Int_Pic_thread (void* data)
 {
 
-    QCamera2HardwareInterface *hw = reinterpret_cast<QCamera2HardwareInterface *>(data);
+    qcamera::QCamera2HardwareInterface *hw = reinterpret_cast<qcamera::QCamera2HardwareInterface *>(data);
 
     if (!hw) {
         ALOGE("take_picture_thread: NULL camera device");
@@ -3387,7 +3387,7 @@ void* Int_Pic_thread (void* data)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::takeLiveSnapshot()
+int qcamera::QCamera2HardwareInterface::takeLiveSnapshot()
 {
     int rc = NO_ERROR;
     rc= pthread_create(&mLiveSnapshotThread, NULL, Live_Snapshot_thread, (void *) this);
@@ -3405,7 +3405,7 @@ int QCamera2HardwareInterface::takeLiveSnapshot()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::takePictureInternal()
+int qcamera::QCamera2HardwareInterface::takePictureInternal()
 {
     int rc = NO_ERROR;
     rc= pthread_create(&mIntPicThread, NULL, Int_Pic_thread, (void *) this);
@@ -3422,7 +3422,7 @@ int QCamera2HardwareInterface::takePictureInternal()
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::checkIntPicPending(bool JpegMemOpt)
+void qcamera::QCamera2HardwareInterface::checkIntPicPending(bool JpegMemOpt)
 {
     cam_int_evt_params_t params;
     int rc = NO_ERROR;
@@ -3477,7 +3477,7 @@ void QCamera2HardwareInterface::checkIntPicPending(bool JpegMemOpt)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::takeBackendPic_internal(bool *JpegMemOpt)
+int qcamera::QCamera2HardwareInterface::takeBackendPic_internal(bool *JpegMemOpt)
 {
     int rc;
 
@@ -3506,11 +3506,11 @@ int QCamera2HardwareInterface::takeBackendPic_internal(bool *JpegMemOpt)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::takeLiveSnapshot_internal()
+int qcamera::QCamera2HardwareInterface::takeLiveSnapshot_internal()
 {
     int rc = NO_ERROR;
     getOrientation();
-    QCameraChannel *pChannel = NULL;
+    qcamera::QCameraChannel *pChannel = NULL;
 
     // start post processor
     rc = m_postprocessor.start(m_channels[QCAMERA_CH_TYPE_SNAPSHOT]);
@@ -3530,7 +3530,7 @@ int QCamera2HardwareInterface::takeLiveSnapshot_internal()
     if ((rc == NO_ERROR) && (NULL != pChannel)) {
 
         // Find and try to link a metadata stream from preview channel
-        QCameraChannel *pMetaChannel = NULL;
+        qcamera::QCameraChannel *pMetaChannel = NULL;
         QCameraStream *pMetaStream = NULL;
 
         if (m_channels[QCAMERA_CH_TYPE_PREVIEW] != NULL) {
@@ -3576,7 +3576,7 @@ end:
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::cancelLiveSnapshot()
+int qcamera::QCamera2HardwareInterface::cancelLiveSnapshot()
 {
     int rc = NO_ERROR;
     if (mLiveSnapshotThread != 0) {
@@ -3600,7 +3600,7 @@ int QCamera2HardwareInterface::cancelLiveSnapshot()
  *
  * RETURN     : a string containing parameter pairs
  *==========================================================================*/
-char* QCamera2HardwareInterface::getParameters()
+char* qcamera::QCamera2HardwareInterface::getParameters()
 {
     char* strParams = NULL;
     String8 str;
@@ -3655,7 +3655,7 @@ char* QCamera2HardwareInterface::getParameters()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::putParameters(char *parms)
+int qcamera::QCamera2HardwareInterface::putParameters(char *parms)
 {
     free(parms);
     return NO_ERROR;
@@ -3675,7 +3675,7 @@ int QCamera2HardwareInterface::putParameters(char *parms)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::sendCommand(int32_t command,
+int qcamera::QCamera2HardwareInterface::sendCommand(int32_t command,
         int32_t &arg1, int32_t &/*arg2*/)
 {
     int rc = NO_ERROR;
@@ -3695,7 +3695,7 @@ int QCamera2HardwareInterface::sendCommand(int32_t command,
             // when not in longshot mode. Preview needs to
             // restart in this case.
             if (isZSLMode() && m_stateMachine.isPreviewRunning()) {
-                QCameraChannel *pChannel = NULL;
+                qcamera::QCameraChannel *pChannel = NULL;
                 QCameraStream *pSnapStream = NULL;
                 pChannel = m_channels[QCAMERA_CH_TYPE_ZSL];
                 if (NULL != pChannel) {
@@ -3730,7 +3730,7 @@ int QCamera2HardwareInterface::sendCommand(int32_t command,
         if ( mLongshotEnabled && m_stateMachine.isCaptureRunning() ) {
             cancelPicture();
             processEvt(QCAMERA_SM_EVT_SNAPSHOT_DONE, NULL);
-            QCameraChannel *pZSLChannel = m_channels[QCAMERA_CH_TYPE_ZSL];
+            qcamera::QCameraChannel *pZSLChannel = m_channels[QCAMERA_CH_TYPE_ZSL];
             if (isZSLMode() && (NULL != pZSLChannel) && mPrepSnapRun) {
                 mCameraHandle->ops->stop_zsl_snapshot(
                         mCameraHandle->camera_handle,
@@ -3779,7 +3779,7 @@ int QCamera2HardwareInterface::sendCommand(int32_t command,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::registerFaceImage(void *img_ptr,
+int qcamera::QCamera2HardwareInterface::registerFaceImage(void *img_ptr,
                                                  cam_pp_offline_src_config_t *config,
                                                  int32_t &faceID)
 {
@@ -3792,7 +3792,7 @@ int QCamera2HardwareInterface::registerFaceImage(void *img_ptr,
     }
 
     // allocate ion memory for source image
-    QCameraHeapMemory *imgBuf = new QCameraHeapMemory(QCAMERA_ION_USE_CACHE);
+    qcamera::QCameraHeapMemory *imgBuf = new qcamera::QCameraHeapMemory(QCAMERA_ION_USE_CACHE);
     if (imgBuf == NULL) {
         ALOGE("%s: Unable to new heap memory obj for image buf", __func__);
         return NO_MEMORY;
@@ -3817,7 +3817,7 @@ int QCamera2HardwareInterface::registerFaceImage(void *img_ptr,
     cam_pp_feature_config_t pp_feature;
     memset(&pp_feature, 0, sizeof(cam_pp_feature_config_t));
     pp_feature.feature_mask = CAM_QCOM_FEATURE_REGISTER_FACE;
-    QCameraReprocessChannel *pChannel =
+    qcamera::QCameraReprocessChannel *pChannel =
         addOfflineReprocChannel(*config, pp_feature, NULL, NULL);
 
     if (pChannel == NULL) {
@@ -3866,7 +3866,7 @@ int QCamera2HardwareInterface::registerFaceImage(void *img_ptr,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::release()
+int qcamera::QCamera2HardwareInterface::release()
 {
     // stop and delete all channels
     for (int i = 0; i <QCAMERA_CH_TYPE_MAX ; i++) {
@@ -3891,7 +3891,7 @@ int QCamera2HardwareInterface::release()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::dump(int /*fd*/)
+int qcamera::QCamera2HardwareInterface::dump(int /*fd*/)
 {
     ALOGE("%s: not supported yet", __func__);
     return INVALID_OPERATION;
@@ -3910,7 +3910,7 @@ int QCamera2HardwareInterface::dump(int /*fd*/)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::processAPI(qcamera_sm_evt_enum_t api, void *api_payload)
+int qcamera::QCamera2HardwareInterface::processAPI(qcamera_sm_evt_enum_t api, void *api_payload)
 {
     return m_stateMachine.procAPI(api, api_payload);
 }
@@ -3928,7 +3928,7 @@ int QCamera2HardwareInterface::processAPI(qcamera_sm_evt_enum_t api, void *api_p
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::processEvt(qcamera_sm_evt_enum_t evt, void *evt_payload)
+int qcamera::QCamera2HardwareInterface::processEvt(qcamera_sm_evt_enum_t evt, void *evt_payload)
 {
     return m_stateMachine.procEvt(evt, evt_payload);
 }
@@ -3946,7 +3946,7 @@ int QCamera2HardwareInterface::processEvt(qcamera_sm_evt_enum_t evt, void *evt_p
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::processSyncEvt(qcamera_sm_evt_enum_t evt, void *evt_payload)
+int qcamera::QCamera2HardwareInterface::processSyncEvt(qcamera_sm_evt_enum_t evt, void *evt_payload)
 {
     int rc = NO_ERROR;
 
@@ -3976,11 +3976,11 @@ int QCamera2HardwareInterface::processSyncEvt(qcamera_sm_evt_enum_t evt, void *e
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::camEvtHandle(uint32_t /*camera_handle*/,
+void qcamera::QCamera2HardwareInterface::camEvtHandle(uint32_t /*camera_handle*/,
                                           mm_camera_event_t *evt,
                                           void *user_data)
 {
-    QCamera2HardwareInterface *obj = (QCamera2HardwareInterface *)user_data;
+    qcamera::QCamera2HardwareInterface *obj = (qcamera::QCamera2HardwareInterface *)user_data;
     if (obj && evt) {
         mm_camera_event_t *payload =
             (mm_camera_event_t *)malloc(sizeof(mm_camera_event_t));
@@ -4018,13 +4018,13 @@ void QCamera2HardwareInterface::camEvtHandle(uint32_t /*camera_handle*/,
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::jpegEvtHandle(jpeg_job_status_t status,
+void qcamera::QCamera2HardwareInterface::jpegEvtHandle(jpeg_job_status_t status,
                                               uint32_t /*client_hdl*/,
                                               uint32_t jobId,
                                               mm_jpeg_output_t *p_output,
                                               void *userdata)
 {
-    QCamera2HardwareInterface *obj = (QCamera2HardwareInterface *)userdata;
+    qcamera::QCamera2HardwareInterface *obj = (qcamera::QCamera2HardwareInterface *)userdata;
     if (obj) {
         qcamera_jpeg_evt_payload_t *payload =
             (qcamera_jpeg_evt_payload_t *)malloc(sizeof(qcamera_jpeg_evt_payload_t));
@@ -4058,7 +4058,7 @@ void QCamera2HardwareInterface::jpegEvtHandle(jpeg_job_status_t status,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::thermalEvtHandle(
+int qcamera::QCamera2HardwareInterface::thermalEvtHandle(
         qcamera_thermal_level_enum_t level, void *userdata, void *data)
 {
     if (!mCameraOpened) {
@@ -4089,7 +4089,7 @@ int QCamera2HardwareInterface::thermalEvtHandle(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::sendEvtNotify(int32_t msg_type,
+int32_t qcamera::QCamera2HardwareInterface::sendEvtNotify(int32_t msg_type,
                                                  int32_t ext1,
                                                  int32_t ext2)
 {
@@ -4114,7 +4114,7 @@ int32_t QCamera2HardwareInterface::sendEvtNotify(int32_t msg_type,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::processAutoFocusEvent(cam_auto_focus_data_t &focus_data)
+int32_t qcamera::QCamera2HardwareInterface::processAutoFocusEvent(cam_auto_focus_data_t &focus_data)
 {
     int32_t ret = NO_ERROR;
     CDBG_HIGH("%s: E",__func__);
@@ -4229,7 +4229,7 @@ int32_t QCamera2HardwareInterface::processAutoFocusEvent(cam_auto_focus_data_t &
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::processZoomEvent(cam_crop_data_t &crop_info)
+int32_t qcamera::QCamera2HardwareInterface::processZoomEvent(cam_crop_data_t &crop_info)
 {
     int32_t ret = NO_ERROR;
 
@@ -4253,7 +4253,7 @@ int32_t QCamera2HardwareInterface::processZoomEvent(cam_crop_data_t &crop_info)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::processHDRData(cam_asd_hdr_scene_data_t hdr_scene)
+int32_t qcamera::QCamera2HardwareInterface::processHDRData(cam_asd_hdr_scene_data_t hdr_scene)
 {
     int rc = NO_ERROR;
 
@@ -4333,7 +4333,7 @@ int32_t QCamera2HardwareInterface::processHDRData(cam_asd_hdr_scene_data_t hdr_s
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::transAwbMetaToParams(cam_awb_params_t &awb_params)
+int32_t qcamera::QCamera2HardwareInterface::transAwbMetaToParams(cam_awb_params_t &awb_params)
 {
     CDBG("%s, cct value: %d", __func__, awb_params.cct_value);
 
@@ -4353,7 +4353,7 @@ int32_t QCamera2HardwareInterface::transAwbMetaToParams(cam_awb_params_t &awb_pa
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::processPrepSnapshotDoneEvent(
+int32_t qcamera::QCamera2HardwareInterface::processPrepSnapshotDoneEvent(
                         cam_prep_snapshot_state_t prep_snapshot_state)
 {
     int32_t ret = NO_ERROR;
@@ -4377,7 +4377,7 @@ int32_t QCamera2HardwareInterface::processPrepSnapshotDoneEvent(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::processASDUpdate(cam_auto_scene_t scene)
+int32_t qcamera::QCamera2HardwareInterface::processASDUpdate(cam_auto_scene_t scene)
 {
 #ifndef VANILLA_HAL
     //set ASD parameter
@@ -4436,7 +4436,7 @@ int32_t QCamera2HardwareInterface::processASDUpdate(cam_auto_scene_t scene)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::processAWBUpdate(cam_awb_params_t &awb_params)
+int32_t qcamera::QCamera2HardwareInterface::processAWBUpdate(cam_awb_params_t &awb_params)
 {
     return transAwbMetaToParams(awb_params);
 }
@@ -4453,7 +4453,7 @@ int32_t QCamera2HardwareInterface::processAWBUpdate(cam_awb_params_t &awb_params
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::processJpegNotify(qcamera_jpeg_evt_payload_t *jpeg_evt)
+int32_t qcamera::QCamera2HardwareInterface::processJpegNotify(qcamera_jpeg_evt_payload_t *jpeg_evt)
 {
     return m_postprocessor.processJpegEvt(jpeg_evt);
 }
@@ -4467,7 +4467,7 @@ int32_t QCamera2HardwareInterface::processJpegNotify(qcamera_jpeg_evt_payload_t 
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::lockAPI()
+void qcamera::QCamera2HardwareInterface::lockAPI()
 {
     pthread_mutex_lock(&m_lock);
 }
@@ -4483,7 +4483,7 @@ void QCamera2HardwareInterface::lockAPI()
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::waitAPIResult(qcamera_sm_evt_enum_t api_evt,
+void qcamera::QCamera2HardwareInterface::waitAPIResult(qcamera_sm_evt_enum_t api_evt,
         qcamera_api_result_t *apiResult)
 {
     CDBG("%s: wait for API result of evt (%d)", __func__, api_evt);
@@ -4525,7 +4525,7 @@ void QCamera2HardwareInterface::waitAPIResult(qcamera_sm_evt_enum_t api_evt,
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::unlockAPI()
+void qcamera::QCamera2HardwareInterface::unlockAPI()
 {
     pthread_mutex_unlock(&m_lock);
 }
@@ -4540,7 +4540,7 @@ void QCamera2HardwareInterface::unlockAPI()
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::signalAPIResult(qcamera_api_result_t *result)
+void qcamera::QCamera2HardwareInterface::signalAPIResult(qcamera_api_result_t *result)
 {
 
     pthread_mutex_lock(&m_lock);
@@ -4573,7 +4573,7 @@ malloc_failed:
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::signalEvtResult(qcamera_api_result_t *result)
+void qcamera::QCamera2HardwareInterface::signalEvtResult(qcamera_api_result_t *result)
 {
     pthread_mutex_lock(&m_evtLock);
     m_evtResult = *result;
@@ -4581,11 +4581,11 @@ void QCamera2HardwareInterface::signalEvtResult(qcamera_api_result_t *result)
     pthread_mutex_unlock(&m_evtLock);
 }
 
-int32_t QCamera2HardwareInterface::prepareRawStream(QCameraChannel *curChannel)
+int32_t qcamera::QCamera2HardwareInterface::prepareRawStream(qcamera::QCameraChannel *curChannel)
 {
     int32_t rc = NO_ERROR;
     cam_dimension_t str_dim,max_dim;
-    QCameraChannel *pChannel;
+    qcamera::QCameraChannel *pChannel;
 
     max_dim.width = 0;
     max_dim.height = 0;
@@ -4644,7 +4644,7 @@ int32_t QCamera2HardwareInterface::prepareRawStream(QCameraChannel *curChannel)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::addStreamToChannel(QCameraChannel *pChannel,
+int32_t qcamera::QCamera2HardwareInterface::addStreamToChannel(qcamera::QCameraChannel *pChannel,
                                                       cam_stream_type_t streamType,
                                                       stream_cb_routine streamCB,
                                                       void *userData)
@@ -4654,7 +4654,7 @@ int32_t QCamera2HardwareInterface::addStreamToChannel(QCameraChannel *pChannel,
     if (streamType == CAM_STREAM_TYPE_RAW) {
         prepareRawStream(pChannel);
     }
-    QCameraHeapMemory *pStreamInfo = allocateStreamInfoBuf(streamType);
+    qcamera::QCameraHeapMemory *pStreamInfo = allocateStreamInfoBuf(streamType);
     if (pStreamInfo == NULL) {
         ALOGE("%s: no mem for stream info buf", __func__);
         return NO_MEMORY;
@@ -4746,10 +4746,10 @@ int32_t QCamera2HardwareInterface::addStreamToChannel(QCameraChannel *pChannel,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::addPreviewChannel()
+int32_t qcamera::QCamera2HardwareInterface::addPreviewChannel()
 {
     int32_t rc = NO_ERROR;
-    QCameraChannel *pChannel = NULL;
+    qcamera::QCameraChannel *pChannel = NULL;
 
     if (m_channels[QCAMERA_CH_TYPE_PREVIEW] != NULL) {
         ALOGD("%s : Preview Channel already added and so delete it", __func__);
@@ -4757,7 +4757,7 @@ int32_t QCamera2HardwareInterface::addPreviewChannel()
         m_channels[QCAMERA_CH_TYPE_PREVIEW] = NULL;
     }
 
-    pChannel = new QCameraChannel(mCameraHandle->camera_handle,
+    pChannel = new qcamera::QCameraChannel(mCameraHandle->camera_handle,
                                   mCameraHandle->ops);
     if (NULL == pChannel) {
         ALOGE("%s: no mem for preview channel", __func__);
@@ -4809,7 +4809,7 @@ int32_t QCamera2HardwareInterface::addPreviewChannel()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::addVideoChannel()
+int32_t qcamera::QCamera2HardwareInterface::addVideoChannel()
 {
     int32_t rc = NO_ERROR;
     QCameraVideoChannel *pChannel = NULL;
@@ -4860,10 +4860,10 @@ int32_t QCamera2HardwareInterface::addVideoChannel()
  * NOTE       : Add this channel for live snapshot usecase. Regular capture will
  *              use addCaptureChannel.
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::addSnapshotChannel()
+int32_t qcamera::QCamera2HardwareInterface::addSnapshotChannel()
 {
     int32_t rc = NO_ERROR;
-    QCameraChannel *pChannel = NULL;
+    qcamera::QCameraChannel *pChannel = NULL;
 
     if (m_channels[QCAMERA_CH_TYPE_SNAPSHOT] != NULL) {
         // if we had ZSL channel before, delete it first
@@ -4871,7 +4871,7 @@ int32_t QCamera2HardwareInterface::addSnapshotChannel()
         m_channels[QCAMERA_CH_TYPE_SNAPSHOT] = NULL;
     }
 
-    pChannel = new QCameraChannel(mCameraHandle->camera_handle,
+    pChannel = new qcamera::QCameraChannel(mCameraHandle->camera_handle,
                                   mCameraHandle->ops);
     if (NULL == pChannel) {
         ALOGE("%s: no mem for snapshot channel", __func__);
@@ -4915,10 +4915,10 @@ int32_t QCamera2HardwareInterface::addSnapshotChannel()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::addRawChannel()
+int32_t qcamera::QCamera2HardwareInterface::addRawChannel()
 {
     int32_t rc = NO_ERROR;
-    QCameraChannel *pChannel = NULL;
+    qcamera::QCameraChannel *pChannel = NULL;
 
     if (m_channels[QCAMERA_CH_TYPE_RAW] != NULL) {
         // if we had raw channel before, delete it first
@@ -4926,7 +4926,7 @@ int32_t QCamera2HardwareInterface::addRawChannel()
         m_channels[QCAMERA_CH_TYPE_RAW] = NULL;
     }
 
-    pChannel = new QCameraChannel(mCameraHandle->camera_handle,
+    pChannel = new qcamera::QCameraChannel(mCameraHandle->camera_handle,
                                   mCameraHandle->ops);
     if (NULL == pChannel) {
         ALOGE("%s: no mem for raw channel", __func__);
@@ -4974,7 +4974,7 @@ int32_t QCamera2HardwareInterface::addRawChannel()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::addZSLChannel()
+int32_t qcamera::QCamera2HardwareInterface::addZSLChannel()
 {
     int32_t rc = NO_ERROR;
     QCameraPicChannel *pChannel = NULL;
@@ -5079,7 +5079,7 @@ int32_t QCamera2HardwareInterface::addZSLChannel()
  * NOTE       : Add this channel for regular capture usecase.
  *              For Live snapshot usecase, use addSnapshotChannel.
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::addCaptureChannel()
+int32_t qcamera::QCamera2HardwareInterface::addCaptureChannel()
 {
     int32_t rc = NO_ERROR;
     QCameraPicChannel *pChannel = NULL;
@@ -5185,17 +5185,17 @@ int32_t QCamera2HardwareInterface::addCaptureChannel()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::addMetaDataChannel()
+int32_t qcamera::QCamera2HardwareInterface::addMetaDataChannel()
 {
     int32_t rc = NO_ERROR;
-    QCameraChannel *pChannel = NULL;
+    qcamera::QCameraChannel *pChannel = NULL;
 
     if (m_channels[QCAMERA_CH_TYPE_METADATA] != NULL) {
         delete m_channels[QCAMERA_CH_TYPE_METADATA];
         m_channels[QCAMERA_CH_TYPE_METADATA] = NULL;
     }
 
-    pChannel = new QCameraChannel(mCameraHandle->camera_handle,
+    pChannel = new qcamera::QCameraChannel(mCameraHandle->camera_handle,
                                   mCameraHandle->ops);
     if (NULL == pChannel) {
         ALOGE("%s: no mem for metadata channel", __func__);
@@ -5234,18 +5234,18 @@ int32_t QCamera2HardwareInterface::addMetaDataChannel()
  *
  * RETURN     : Ptr to the newly created channel obj. NULL if failed.
  *==========================================================================*/
-QCameraReprocessChannel *QCamera2HardwareInterface::addReprocChannel(
-                                                      QCameraChannel *pInputChannel)
+qcamera::QCameraReprocessChannel *qcamera::QCamera2HardwareInterface::addReprocChannel(
+                                                      qcamera::QCameraChannel *pInputChannel)
 {
     int32_t rc = NO_ERROR;
-    QCameraReprocessChannel *pChannel = NULL;
+    qcamera::QCameraReprocessChannel *pChannel = NULL;
 
     if (pInputChannel == NULL) {
         ALOGE("%s: input channel obj is NULL", __func__);
         return NULL;
     }
 
-    pChannel = new QCameraReprocessChannel(mCameraHandle->camera_handle,
+    pChannel = new qcamera::QCameraReprocessChannel(mCameraHandle->camera_handle,
                                            mCameraHandle->ops);
     if (NULL == pChannel) {
         ALOGE("%s: no mem for reprocess channel", __func__);
@@ -5429,16 +5429,16 @@ QCameraReprocessChannel *QCamera2HardwareInterface::addReprocChannel(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-QCameraReprocessChannel *QCamera2HardwareInterface::addOfflineReprocChannel(
+qcamera::QCameraReprocessChannel *qcamera::QCamera2HardwareInterface::addOfflineReprocChannel(
                                             cam_pp_offline_src_config_t &img_config,
                                             cam_pp_feature_config_t &pp_feature,
                                             stream_cb_routine stream_cb,
                                             void *userdata)
 {
     int32_t rc = NO_ERROR;
-    QCameraReprocessChannel *pChannel = NULL;
+    qcamera::QCameraReprocessChannel *pChannel = NULL;
 
-    pChannel = new QCameraReprocessChannel(mCameraHandle->camera_handle,
+    pChannel = new qcamera::QCameraReprocessChannel(mCameraHandle->camera_handle,
                                            mCameraHandle->ops);
     if (NULL == pChannel) {
         ALOGE("%s: no mem for reprocess channel", __func__);
@@ -5452,7 +5452,7 @@ QCameraReprocessChannel *QCamera2HardwareInterface::addOfflineReprocChannel(
         return NULL;
     }
 
-    QCameraHeapMemory *pStreamInfo = allocateStreamInfoBuf(CAM_STREAM_TYPE_OFFLINE_PROC);
+    qcamera::QCameraHeapMemory *pStreamInfo = allocateStreamInfoBuf(CAM_STREAM_TYPE_OFFLINE_PROC);
     if (pStreamInfo == NULL) {
         ALOGE("%s: no mem for stream info buf", __func__);
         delete pChannel;
@@ -5499,19 +5499,19 @@ QCameraReprocessChannel *QCamera2HardwareInterface::addOfflineReprocChannel(
  *
  * RETURN     : Ptr to the newly created channel obj. NULL if failed.
  *==========================================================================*/
-QCameraReprocessChannel *QCamera2HardwareInterface::addDualReprocChannel(
-                                                      QCameraChannel *pInputChannel)
+qcamera::QCameraReprocessChannel *qcamera::QCamera2HardwareInterface::addDualReprocChannel(
+                                                      qcamera::QCameraChannel *pInputChannel)
 
 {
     int32_t rc = NO_ERROR;
-    QCameraReprocessChannel *pChannel = NULL;
+    qcamera::QCameraReprocessChannel *pChannel = NULL;
 
     if (pInputChannel == NULL) {
         ALOGE("%s: input channel obj is NULL", __func__);
         return NULL;
     }
 
-    pChannel = new QCameraReprocessChannel(mCameraHandle->camera_handle,
+    pChannel = new qcamera::QCameraReprocessChannel(mCameraHandle->camera_handle,
                                            mCameraHandle->ops);
     if (NULL == pChannel) {
         ALOGE("%s: no mem for reprocess channel", __func__);
@@ -5579,7 +5579,7 @@ QCameraReprocessChannel *QCamera2HardwareInterface::addDualReprocChannel(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::addChannel(qcamera_ch_type_enum_t ch_type)
+int32_t qcamera::QCamera2HardwareInterface::addChannel(qcamera_ch_type_enum_t ch_type)
 {
     int32_t rc = UNKNOWN_ERROR;
     switch (ch_type) {
@@ -5623,7 +5623,7 @@ int32_t QCamera2HardwareInterface::addChannel(qcamera_ch_type_enum_t ch_type)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::delChannel(qcamera_ch_type_enum_t ch_type,
+int32_t qcamera::QCamera2HardwareInterface::delChannel(qcamera_ch_type_enum_t ch_type,
                                               bool destroy)
 {
     if (m_channels[ch_type] != NULL) {
@@ -5650,7 +5650,7 @@ int32_t QCamera2HardwareInterface::delChannel(qcamera_ch_type_enum_t ch_type,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::startChannel(qcamera_ch_type_enum_t ch_type)
+int32_t qcamera::QCamera2HardwareInterface::startChannel(qcamera_ch_type_enum_t ch_type)
 {
     int32_t rc = UNKNOWN_ERROR;
     if (m_channels[ch_type] != NULL) {
@@ -5675,7 +5675,7 @@ int32_t QCamera2HardwareInterface::startChannel(qcamera_ch_type_enum_t ch_type)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::stopChannel(qcamera_ch_type_enum_t ch_type)
+int32_t qcamera::QCamera2HardwareInterface::stopChannel(qcamera_ch_type_enum_t ch_type)
 {
     int32_t rc = UNKNOWN_ERROR;
     if (m_channels[ch_type] != NULL) {
@@ -5696,7 +5696,7 @@ int32_t QCamera2HardwareInterface::stopChannel(qcamera_ch_type_enum_t ch_type)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::preparePreview()
+int32_t qcamera::QCamera2HardwareInterface::preparePreview()
 {
     ATRACE_CALL();
     int32_t rc = NO_ERROR;
@@ -5766,7 +5766,7 @@ int32_t QCamera2HardwareInterface::preparePreview()
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::unpreparePreview()
+void qcamera::QCamera2HardwareInterface::unpreparePreview()
 {
     delChannel(QCAMERA_CH_TYPE_ZSL);
     delChannel(QCAMERA_CH_TYPE_PREVIEW);
@@ -5783,7 +5783,7 @@ void QCamera2HardwareInterface::unpreparePreview()
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::playShutter(){
+void qcamera::QCamera2HardwareInterface::playShutter(){
      if (mNotifyCb == NULL ||
          msgTypeEnabledWithLock(CAMERA_MSG_SHUTTER) == 0){
          CDBG("%s: shutter msg not enabled or NULL cb", __func__);
@@ -5809,7 +5809,7 @@ void QCamera2HardwareInterface::playShutter(){
  *
  * RETURN     : a channel obj if found, NULL if not found
  *==========================================================================*/
-QCameraChannel *QCamera2HardwareInterface::getChannelByHandle(uint32_t channelHandle)
+qcamera::QCameraChannel *qcamera::QCamera2HardwareInterface::getChannelByHandle(uint32_t channelHandle)
 {
     for(int i = 0; i < QCAMERA_CH_TYPE_MAX; i++) {
         if (m_channels[i] != NULL &&
@@ -5832,7 +5832,7 @@ QCameraChannel *QCamera2HardwareInterface::getChannelByHandle(uint32_t channelHa
  *              true  -- success
  *              fale -- failure code
  *==========================================================================*/
-bool QCamera2HardwareInterface::needPreviewFDCallback(uint8_t num_faces)
+bool qcamera::QCamera2HardwareInterface::needPreviewFDCallback(uint8_t num_faces)
 {
     if (num_faces == 0 && mNumPreviewFaces == 0) {
         return false;
@@ -5853,7 +5853,7 @@ bool QCamera2HardwareInterface::needPreviewFDCallback(uint8_t num_faces)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::processFaceDetectionResult(cam_face_detection_data_t *fd_data)
+int32_t qcamera::QCamera2HardwareInterface::processFaceDetectionResult(cam_face_detection_data_t *fd_data)
 {
     if (!mParameters.isFaceDetectionEnabled()) {
         CDBG_HIGH("%s: FaceDetection not enabled, no ops here", __func__);
@@ -6057,7 +6057,7 @@ int32_t QCamera2HardwareInterface::processFaceDetectionResult(cam_face_detection
  *
  * RETURN     : None
  *==========================================================================*/
-void QCamera2HardwareInterface::releaseCameraMemory(void *data,
+void qcamera::QCamera2HardwareInterface::releaseCameraMemory(void *data,
                                                     void */*cookie*/,
                                                     int32_t /*cbStatus*/)
 {
@@ -6079,7 +6079,7 @@ void QCamera2HardwareInterface::releaseCameraMemory(void *data,
  *
  * RETURN     : None
  *==========================================================================*/
-void QCamera2HardwareInterface::returnStreamBuffer(void *data,
+void qcamera::QCamera2HardwareInterface::returnStreamBuffer(void *data,
                                                    void *cookie,
                                                    int32_t /*cbStatus*/)
 {
@@ -6104,7 +6104,7 @@ void QCamera2HardwareInterface::returnStreamBuffer(void *data,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::processHistogramStats(cam_hist_stats_t &stats_data)
+int32_t qcamera::QCamera2HardwareInterface::processHistogramStats(cam_hist_stats_t &stats_data)
 {
 #ifndef VANILLA_HAL
     if (!mParameters.isHistogramEnabled()) {
@@ -6171,7 +6171,7 @@ int32_t QCamera2HardwareInterface::processHistogramStats(cam_hist_stats_t &stats
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::calcThermalLevel(
+int qcamera::QCamera2HardwareInterface::calcThermalLevel(
             qcamera_thermal_level_enum_t level,
             const int minFPSi,
             const int maxFPSi,
@@ -6293,7 +6293,7 @@ int QCamera2HardwareInterface::calcThermalLevel(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::recalcFPSRange(int &minFPS, int &maxFPS,
+int qcamera::QCamera2HardwareInterface::recalcFPSRange(int &minFPS, int &maxFPS,
         cam_fps_range_t &adjustedRange)
 {
     enum msm_vfe_frame_skip_pattern skipPattern;
@@ -6317,7 +6317,7 @@ int QCamera2HardwareInterface::recalcFPSRange(int &minFPS, int &maxFPS,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::updateThermalLevel(
+int qcamera::QCamera2HardwareInterface::updateThermalLevel(
             qcamera_thermal_level_enum_t level)
 {
     int ret = NO_ERROR;
@@ -6364,7 +6364,7 @@ int QCamera2HardwareInterface::updateThermalLevel(
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCamera2HardwareInterface::updateParameters(const char *parms, bool &needRestart)
+int qcamera::QCamera2HardwareInterface::updateParameters(const char *parms, bool &needRestart)
 {
     int rc = NO_ERROR;
     pthread_mutex_lock(&m_parm_lock);
@@ -6396,7 +6396,7 @@ int QCamera2HardwareInterface::updateParameters(const char *parms, bool &needRes
  * NOTE       : This function must be called after updateParameters.
  *              Otherwise, no change will be passed to backend to take effect.
  *==========================================================================*/
-int QCamera2HardwareInterface::commitParameterChanges()
+int qcamera::QCamera2HardwareInterface::commitParameterChanges()
 {
     int rc = NO_ERROR;
     pthread_mutex_lock(&m_parm_lock);
@@ -6419,7 +6419,7 @@ int QCamera2HardwareInterface::commitParameterChanges()
  * RETURN     : true: need print out fps log
  *              false: no need to print out fps log
  *==========================================================================*/
-bool QCamera2HardwareInterface::needDebugFps()
+bool qcamera::QCamera2HardwareInterface::needDebugFps()
 {
     bool needFps = false;
     pthread_mutex_lock(&m_parm_lock);
@@ -6438,7 +6438,7 @@ bool QCamera2HardwareInterface::needDebugFps()
  * RETURN     : true: needed
  *              false: no need
  *==========================================================================*/
-bool QCamera2HardwareInterface::isCACEnabled()
+bool qcamera::QCamera2HardwareInterface::isCACEnabled()
 {
     char prop[PROPERTY_VALUE_MAX];
     memset(prop, 0, sizeof(prop));
@@ -6457,7 +6457,7 @@ bool QCamera2HardwareInterface::isCACEnabled()
  * RETURN     : true: needed
  *              false: no need
  *==========================================================================*/
-bool QCamera2HardwareInterface::is4k2kResolution(cam_dimension_t* resolution)
+bool qcamera::QCamera2HardwareInterface::is4k2kResolution(cam_dimension_t* resolution)
 {
    bool enabled = false;
    if ((resolution->width == 4096 && resolution->height == 2160) ||
@@ -6480,7 +6480,7 @@ bool QCamera2HardwareInterface::is4k2kResolution(cam_dimension_t* resolution)
  * RETURN     : true: needed
  *              false: no need
  *==========================================================================*/
-bool QCamera2HardwareInterface::isPreviewRestartEnabled()
+bool qcamera::QCamera2HardwareInterface::isPreviewRestartEnabled()
 {
     char prop[PROPERTY_VALUE_MAX];
     memset(prop, 0, sizeof(prop));
@@ -6500,7 +6500,7 @@ bool QCamera2HardwareInterface::isPreviewRestartEnabled()
  * RETURN     : true: AF in progress
  *              false: AF not in progress
  *==========================================================================*/
-bool QCamera2HardwareInterface::isAFRunning()
+bool qcamera::QCamera2HardwareInterface::isAFRunning()
 {
     bool isAFInProgress = (m_currentFocusState == CAM_AF_SCANNING &&
             (mParameters.getFocusMode() == CAM_FOCUS_MODE_AUTO ||
@@ -6509,7 +6509,7 @@ bool QCamera2HardwareInterface::isAFRunning()
     return isAFInProgress;
 }
 
-bool QCamera2HardwareInterface::needDualReprocess()
+bool qcamera::QCamera2HardwareInterface::needDualReprocess()
 {
     bool ret = false;
     pthread_mutex_lock(&m_parm_lock);
@@ -6531,7 +6531,7 @@ bool QCamera2HardwareInterface::needDualReprocess()
  * RETURN     : true: needed
  *              false: no need
  *==========================================================================*/
-bool QCamera2HardwareInterface::needReprocess()
+bool qcamera::QCamera2HardwareInterface::needReprocess()
 {
     pthread_mutex_lock(&m_parm_lock);
     if (!mParameters.isJpegPictureFormat() &&
@@ -6623,7 +6623,7 @@ bool QCamera2HardwareInterface::needReprocess()
  * RETURN     : true: needed
  *              false: no need
  *==========================================================================*/
-bool QCamera2HardwareInterface::needRotationReprocess()
+bool qcamera::QCamera2HardwareInterface::needRotationReprocess()
 {
     pthread_mutex_lock(&m_parm_lock);
     if (!mParameters.isJpegPictureFormat() &&
@@ -6660,7 +6660,7 @@ bool QCamera2HardwareInterface::needRotationReprocess()
  * RETURN     : true: needed
  *              false: no need
  *==========================================================================*/
-bool QCamera2HardwareInterface::needScaleReprocess()
+bool qcamera::QCamera2HardwareInterface::needScaleReprocess()
 {
     pthread_mutex_lock(&m_parm_lock);
     if (!mParameters.isJpegPictureFormat() &&
@@ -6694,7 +6694,7 @@ bool QCamera2HardwareInterface::needScaleReprocess()
  *
  * RETURN     : none
  *==========================================================================*/
-void QCamera2HardwareInterface::getThumbnailSize(cam_dimension_t &dim)
+void qcamera::QCamera2HardwareInterface::getThumbnailSize(cam_dimension_t &dim)
 {
     pthread_mutex_lock(&m_parm_lock);
     mParameters.getThumbnailSize(&dim.width, &dim.height);
@@ -6710,7 +6710,7 @@ void QCamera2HardwareInterface::getThumbnailSize(cam_dimension_t &dim)
  *
  * RETURN     : jpeg quality setting
  *==========================================================================*/
-uint32_t QCamera2HardwareInterface::getJpegQuality()
+uint32_t qcamera::QCamera2HardwareInterface::getJpegQuality()
 {
     uint32_t quality = 0;
     pthread_mutex_lock(&m_parm_lock);
@@ -6728,7 +6728,7 @@ uint32_t QCamera2HardwareInterface::getJpegQuality()
  *
  * RETURN     : rotation information
  *==========================================================================*/
-uint32_t QCamera2HardwareInterface::getJpegRotation() {
+uint32_t qcamera::QCamera2HardwareInterface::getJpegRotation() {
     return mCaptureRotation;
 }
 
@@ -6741,7 +6741,7 @@ uint32_t QCamera2HardwareInterface::getJpegRotation() {
  *
  * RETURN     : rotation information
  *==========================================================================*/
-void QCamera2HardwareInterface::getOrientation() {
+void qcamera::QCamera2HardwareInterface::getOrientation() {
     pthread_mutex_lock(&m_parm_lock);
     mCaptureRotation = mParameters.getJpegRotation();
     pthread_mutex_unlock(&m_parm_lock);
@@ -6756,11 +6756,11 @@ void QCamera2HardwareInterface::getOrientation() {
  *
  * RETURN     : exif data from user setting and GPS
  *==========================================================================*/
-QCameraExif *QCamera2HardwareInterface::getExifData()
+qcamera::QCameraExif *qcamera::QCamera2HardwareInterface::getExifData()
 {
-    QCameraExif *exif = new QCameraExif();
+    qcamera::QCameraExif *exif = new qcamera::QCameraExif();
     if (exif == NULL) {
-        ALOGE("%s: No memory for QCameraExif", __func__);
+        ALOGE("%s: No memory for qcamera::QCameraExif", __func__);
         return NULL;
     }
 
@@ -6913,7 +6913,7 @@ QCameraExif *QCamera2HardwareInterface::getExifData()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::setHistogram(bool histogram_en)
+int32_t qcamera::QCamera2HardwareInterface::setHistogram(bool histogram_en)
 {
     return mParameters.setHistogram(histogram_en);
 }
@@ -6930,7 +6930,7 @@ int32_t QCamera2HardwareInterface::setHistogram(bool histogram_en)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::setFaceDetection(bool enabled)
+int32_t qcamera::QCamera2HardwareInterface::setFaceDetection(bool enabled)
 {
     return mParameters.setFaceDetection(enabled);
 }
@@ -6946,7 +6946,7 @@ int32_t QCamera2HardwareInterface::setFaceDetection(bool enabled)
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-bool QCamera2HardwareInterface::needProcessPreviewFrame()
+bool qcamera::QCamera2HardwareInterface::needProcessPreviewFrame()
 {
     return m_stateMachine.isPreviewRunning()
             && mParameters.isDisplayFrameNeeded();
@@ -6964,7 +6964,7 @@ bool QCamera2HardwareInterface::needProcessPreviewFrame()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::prepareHardwareForSnapshot(int32_t afNeeded)
+int32_t qcamera::QCamera2HardwareInterface::prepareHardwareForSnapshot(int32_t afNeeded)
 {
     ATRACE_CALL();
     CDBG_HIGH("[KPI Perf] %s: Prepare hardware such as LED",__func__);
@@ -6983,7 +6983,7 @@ int32_t QCamera2HardwareInterface::prepareHardwareForSnapshot(int32_t afNeeded)
   * RETURN     : true: needed
  *              false: no need
  *==========================================================================*/
-bool QCamera2HardwareInterface::needFDMetadata(qcamera_ch_type_enum_t channel_type)
+bool qcamera::QCamera2HardwareInterface::needFDMetadata(qcamera_ch_type_enum_t channel_type)
 {
     //Note: Currently we only process ZSL channel
     bool value = false;
@@ -6999,7 +6999,7 @@ bool QCamera2HardwareInterface::needFDMetadata(qcamera_ch_type_enum_t channel_ty
     return value;
 }
 
-bool QCamera2HardwareInterface::removeSizeFromList(cam_dimension_t* size_list,
+bool qcamera::QCamera2HardwareInterface::removeSizeFromList(cam_dimension_t* size_list,
         size_t length, cam_dimension_t size)
 {
    bool found = false;
@@ -7021,7 +7021,7 @@ bool QCamera2HardwareInterface::removeSizeFromList(cam_dimension_t* size_list,
    return found;
 }
 
-void QCamera2HardwareInterface::copyList(cam_dimension_t *src_list,
+void qcamera::QCamera2HardwareInterface::copyList(cam_dimension_t *src_list,
         cam_dimension_t *dst_list, size_t len) {
     for (size_t i = 0; i < len; i++) {
         dst_list[i] = src_list[i];
@@ -7034,17 +7034,17 @@ void QCamera2HardwareInterface::copyList(cam_dimension_t *src_list,
  * DESCRIPTION: data process routine that executes deffered tasks
  *
  * PARAMETERS :
- *   @data    : user data ptr (QCamera2HardwareInterface)
+ *   @data    : user data ptr (qcamera::QCamera2HardwareInterface)
  *
  * RETURN     : None
  *==========================================================================*/
-void *QCamera2HardwareInterface::defferedWorkRoutine(void *obj)
+void *qcamera::QCamera2HardwareInterface::defferedWorkRoutine(void *obj)
 {
     int running = 1;
     int ret;
     uint8_t is_active = FALSE;
 
-    QCamera2HardwareInterface *pme = (QCamera2HardwareInterface *)obj;
+    qcamera::QCamera2HardwareInterface *pme = (qcamera::QCamera2HardwareInterface *)obj;
     QCameraCmdThread *cmdThread = &pme->mDefferedWorkThread;
     cmdThread->setName("CAM_defrdWrk");
 
@@ -7084,7 +7084,7 @@ void *QCamera2HardwareInterface::defferedWorkRoutine(void *obj)
                 switch( dw->cmd ) {
                 case CMD_DEFF_ALLOCATE_BUFF:
                     {
-                        QCameraChannel * pChannel = dw->args.allocArgs.ch;
+                        qcamera::QCameraChannel * pChannel = dw->args.allocArgs.ch;
 
                         if ( NULL == pChannel ) {
                             ALOGE("%s : Invalid deferred work channel",
@@ -7122,7 +7122,7 @@ void *QCamera2HardwareInterface::defferedWorkRoutine(void *obj)
                     break;
                 case CMD_DEFF_PPROC_START:
                     {
-                        QCameraChannel * pChannel = dw->args.pprocArgs;
+                        qcamera::QCameraChannel * pChannel = dw->args.pprocArgs;
                         assert(pChannel);
 
                         if (pme->m_postprocessor.start(pChannel) != NO_ERROR) {
@@ -7167,7 +7167,7 @@ void *QCamera2HardwareInterface::defferedWorkRoutine(void *obj)
  * RETURN     : true - regular capture
  *              false - other type of capture
  *==========================================================================*/
-bool QCamera2HardwareInterface::isCaptureShutterEnabled()
+bool qcamera::QCamera2HardwareInterface::isCaptureShutterEnabled()
 {
     char prop[PROPERTY_VALUE_MAX];
     memset(prop, 0, sizeof(prop));
@@ -7189,7 +7189,7 @@ bool QCamera2HardwareInterface::isCaptureShutterEnabled()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::queueDefferedWork(DefferedWorkCmd cmd,
+int32_t qcamera::QCamera2HardwareInterface::queueDefferedWork(DefferedWorkCmd cmd,
                                                      DefferWorkArgs args)
 {
     Mutex::Autolock l(mDeffLock);
@@ -7218,7 +7218,7 @@ int32_t QCamera2HardwareInterface::queueDefferedWork(DefferedWorkCmd cmd,
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int32_t QCamera2HardwareInterface::waitDefferedWork(int32_t &job_id)
+int32_t qcamera::QCamera2HardwareInterface::waitDefferedWork(int32_t &job_id)
 {
     Mutex::Autolock l(mDeffLock);
 
@@ -7244,7 +7244,7 @@ int32_t QCamera2HardwareInterface::waitDefferedWork(int32_t &job_id)
  * RETURN     : true - regular capture
  *              false - other type of capture
  *==========================================================================*/
-bool QCamera2HardwareInterface::isRegularCapture()
+bool qcamera::QCamera2HardwareInterface::isRegularCapture()
 {
     bool ret = false;
 
@@ -7268,7 +7268,7 @@ bool QCamera2HardwareInterface::isRegularCapture()
  * RETURN     :
  *   None
  *==========================================================================*/
-void QCamera2HardwareInterface::getLogLevel()
+void qcamera::QCamera2HardwareInterface::getLogLevel()
 {
     char prop[PROPERTY_VALUE_MAX];
     memset(prop, 0, sizeof(prop));
@@ -7302,9 +7302,7 @@ void QCamera2HardwareInterface::getLogLevel()
  * RETURN     : Type of sensor - bayer or YUV
  *
  *==========================================================================*/
-cam_sensor_t QCamera2HardwareInterface::getSensorType()
+cam_sensor_t qcamera::QCamera2HardwareInterface::getSensorType()
 {
     return gCamCapability[mCameraId]->sensor_type.sens_type;
-}
-
 }; // namespace qcamera
