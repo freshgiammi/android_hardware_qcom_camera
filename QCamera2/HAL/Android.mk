@@ -17,24 +17,19 @@ LOCAL_SRC_FILES := \
         QCameraThermalAdapter.cpp \
         wrapper/QualcommCamera.cpp
 
-<<<<<<< HEAD
 LOCAL_CFLAGS = -Wall -Wextra -Werror
 
 LOCAL_CFLAGS += -DHAS_MULTIMEDIA_HINTS
 
 #Debug logs are enabled
 #LOCAL_CFLAGS += -DDISABLE_DEBUG_LOG
-=======
+
 LOCAL_CFLAGS = -Wall -Werror
 LOCAL_CLANG_CFLAGS += \
     -Wno-error=unused-variable \
     -Wno-error=sign-compare \
     -Wno-error=unused-parameter \
-    -Wno-error=unused-private-field 
-    
-# Debug logs are disabled
-LOCAL_CFLAGS += -DDISABLE_DEBUG_LOG
->>>>>>> 8d10f7be9... QCamera2: Reduce log spam
+    -Wno-error=unused-private-field
 
 TARGET_USE_VENDOR_CAMERA_EXT := true
 LOCAL_CFLAGS += -DDEFAULT_ZSL_MODE_ON

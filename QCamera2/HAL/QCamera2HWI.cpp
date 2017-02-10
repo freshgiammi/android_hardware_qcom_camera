@@ -811,10 +811,8 @@ char* QCamera2HardwareInterface::get_parameters(struct camera_device *device)
         hw->waitAPIResult(QCAMERA_SM_EVT_GET_PARAMS, &apiResult);
         ret = apiResult.params;
 
-        if (hw->m_apiResult.params) {
             android::CameraParameters params;
             params.unflatten(android::String8(hw->m_apiResult.params));
-            hw->putParameters(hw->m_apiResult.params);
 
             // Hide nv12-venus from userspace to prevent framework crash
             const char *fmt = params.get("preview-format");
@@ -1098,7 +1096,6 @@ QCamera2HardwareInterface::QCamera2HardwareInterface(uint32_t cameraId)
       mPreviewFrameSkipValid(0),
       mAdvancedCaptureConfigured(false),
       mNumPreviewFaces(-1),
-      mPreviewFrameSkipValid(0),
       mCurrFrameCnt(0),
       mVideoMem(NULL)
 {
@@ -4321,7 +4318,6 @@ int32_t QCamera2HardwareInterface::processHDRData(cam_asd_hdr_scene_data_t hdr_s
 #endif
 #endif
 
-#endif
   return rc;
 }
 
